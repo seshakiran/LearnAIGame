@@ -1,0 +1,22 @@
+# Unity generated
+UnityProject/Library/
+UnityProject/Temp/
+UnityProject/Obj/
+UnityProject/Build/
+UnityProject/Builds/
+UnityProject/Logs/
+UnityProject/UserSettings/
+UnityProject/MemoryCaptures/
+UnityProject/.vs/
+UnityProject/.vsconfig
+*.csproj
+*.sln
+*.unityproj
+
+# OS
+.DS_Store
+
+# AWS / secrets — never commit these
+.env
+*.pem
+credentials

@@ -160,13 +160,18 @@ Sell companies on the differentiation thesis directly (§2.6): not a talent pool
   - Architectural note: Unity is not the right tool for the company/hiring-facing side. §9's Platform & Hiring Layer (Phase 6-7) should be a **separate web dashboard**, not built inside Unity — company users searching for talent are desktop/business users, and that's an admin/search surface, not a game surface. The web page that directs prospects to the app becomes the same web layer's home for the future company portal.
 - **Video content pipeline**: Grok video generation is **HITL-controlled, not on-the-fly** — clips are pre-recorded and uploaded to a hosting location ahead of time. This confirms the §5 design assumption (cached, not live-generated at unlock time) — no latency risk to the reward-timing in the core loop. Unity streams/plays clips from wherever they're hosted (CDN/cloud storage) via URL.
 
-### 10.2 Still open (need your input)
+### 10.2 Locked (round 2)
 
-- **Team/solo**: are you building this solo with me, or is there a team (content, design, backend)?
-- **Timeline**: how many weeks realistically available, and is there a target launch trigger (event, cohort, waitlist size)?
-- **Invite system infra**: how are invites generated/tracked — simple codes, waitlist + manual approval, referral chains?
-- **Certificate verification infra**: hosted verification page, PDF + QR, or integration with an existing credentialing standard (e.g. Open Badges)?
-- **Backend**: Unity is the client — needs an API/backend for content delivery, checkpoint/assessment tracking, invite codes, and certificate issuance. No stack chosen yet.
+- **Team**: solo (user + Claude Code).
+- **Timeline**: 1 week for Phase 0 (§12 spikes). Aggressive — scope is deliberately gray-box/minimal per §12, not production-polish.
+- **Access model confirmed**: invite-only (reconfirms §7, no change).
+- **Video/content hosting infra**: AWS — S3 bucket for hosting the HITL-produced Feynman videos (§12.2), Unity streams from S3 URLs.
+
+### 10.3 Still open (lower priority, not blocking Phase 0)
+
+- **Invite code generation/tracking mechanics**: simple codes vs. waitlist + manual approval vs. referral chains — needed for Phase 4, not Phase 0.
+- **Certificate verification infra**: hosted verification page, PDF + QR, or an existing credentialing standard (e.g. Open Badges) — needed for Phase 3, not Phase 0.
+- **Backend for Phase 1+**: Unity is the client — will need an API for content delivery, checkpoint/assessment tracking, invite codes, and certificate issuance eventually. Not required for the Phase 0 spikes themselves (Spike A can run with local/hardcoded data; Spike B only needs S3, not a full backend).
 
 ## 11. Proposed Phase Breakdown (to refine once §10.2 is answered)
 
