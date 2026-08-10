@@ -1,4 +1,5 @@
 using System;
+using LearnAIGame.Bootstrap;
 using LearnAIGame.Cards;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -19,35 +20,65 @@ namespace LearnAIGame.Gameplay
 
         private const float SwipeThreshold = 160f;
         private const float MaxRotationDegrees = 12f;
+        private static readonly Vector2 CardSize = new Vector2(620, 600);
 
         public static SwipeCardView Create(Transform parent, JudgmentCard card)
         {
-            var go = new GameObject($"Card_{card.id}", typeof(RectTransform));
-            go.transform.SetParent(parent, false);
+            var root = new GameObject($"Card_{card.id}", typeof(RectTransform));
+            root.transform.SetParent(parent, false);
 
-            var rect = go.GetComponent<RectTransform>();
-            rect.sizeDelta = new Vector2(600, 760);
-            rect.anchorMin = rect.anchorMax = new Vector2(0.5f, 0.5f);
-            rect.anchoredPosition = Vector2.zero;
+            var rootRect = root.GetComponent<RectTransform>();
+            rootRect.sizeDelta = CardSize;
+            rootRect.anchorMin = rootRect.anchorMax = new Vector2(0.5f, 0.5f);
+            rootRect.anchoredPosition = Vector2.zero;
 
-            var bg = go.AddComponent<Image>();
-            bg.color = new Color(0.14f, 0.14f, 0.18f, 1f);
+            // Drop shadow, offset behind the card, for pop against the deep background.
+            var shadow = UIFactory.CreateSurface(root.transform, GamePalette.ShadowDark, new Vector2(0, -14), CardSize, 36, "CardShadow");
+            shadow.raycastTarget = false;
 
-            var view = go.AddComponent<SwipeCardView>();
-            view._rect = rect;
+            var faceGo = new GameObject("CardFace", typeof(RectTransform));
+            faceGo.transform.SetParent(root.transform, false);
+            var faceRect = faceGo.GetComponent<RectTransform>();
+            faceRect.anchorMin = faceRect.anchorMax = new Vector2(0.5f, 0.5f);
+            faceRect.anchoredPosition = Vector2.zero;
+            faceRect.sizeDelta = CardSize;
 
-            AddLabel(go.transform, "Prompt", card.prompt, 34, new Vector2(0, 260), FontStyle.Bold, TextAnchor.MiddleCenter, new Vector2(520, 200));
-            AddLabel(go.transform, "OptionA", $"←  {card.optionA}", 26, new Vector2(-260, -40), FontStyle.Normal, TextAnchor.MiddleLeft, new Vector2(300, 300));
-            AddLabel(go.transform, "OptionB", $"{card.optionB}  →", 26, new Vector2(260, -40), FontStyle.Normal, TextAnchor.MiddleRight, new Vector2(300, 300));
-            AddLabel(go.transform, "Hint", "swipe toward the one you trust", 18, new Vector2(0, -330), FontStyle.Italic, TextAnchor.MiddleCenter, new Vector2(500, 40));
+            var themeColor = GamePalette.CardThemeFor(card.id);
 
-            var canvasGroup = go.AddComponent<CanvasGroup>();
+            var bg = faceGo.AddComponent<Image>();
+            bg.sprite = UIFactory.GetRoundedSprite(36);
+            bg.type = Image.Type.Sliced;
+            bg.color = themeColor;
+
+            var view = root.AddComponent<SwipeCardView>();
+            view._rect = rootRect;
+
+            AddLabel(faceGo.transform, "Prompt", card.prompt, 30, new Vector2(0, 160), FontStyle.Bold, TextAnchor.MiddleCenter, new Vector2(560, 170), Color.white);
+
+            BuildChoiceChip(faceGo.transform, "A", card.optionA, new Vector2(-150, -190), GamePalette.ChoiceA);
+            BuildChoiceChip(faceGo.transform, "B", card.optionB, new Vector2(150, -190), GamePalette.ChoiceB);
+
+            var canvasGroup = root.AddComponent<CanvasGroup>();
             canvasGroup.blocksRaycasts = true;
 
             return view;
         }
 
-        private static void AddLabel(Transform parent, string name, string text, int fontSize, Vector2 anchoredPos, FontStyle style, TextAnchor anchor, Vector2 size)
+        // Badge sits centered on top of the answer chip, like a Kahoot answer marker —
+        // stays within the chip's own width so it can never spill past the card/canvas edge.
+        private static void BuildChoiceChip(Transform parent, string letter, string text, Vector2 anchoredPos, Color badgeColor)
+        {
+            var chipSize = new Vector2(210, 110);
+            var chip = UIFactory.CreateSurface(parent, GamePalette.CardSurface, anchoredPos, chipSize, 20, $"Chip{letter}");
+            AddLabel(chip.transform, "ChipText", text, 18, new Vector2(0, -14), FontStyle.Bold, TextAnchor.MiddleCenter, new Vector2(180, 66), GamePalette.TextDark);
+
+            const float badgeSize = 52f;
+            var badgeY = anchoredPos.y + chipSize.y / 2f;
+            var badge = UIFactory.CreateSurface(parent, badgeColor, new Vector2(anchoredPos.x, badgeY), new Vector2(badgeSize, badgeSize), (int)(badgeSize / 2f), $"Badge{letter}");
+            AddLabel(badge.transform, "BadgeLabel", letter, 22, Vector2.zero, FontStyle.Bold, TextAnchor.MiddleCenter, new Vector2(badgeSize - 4, badgeSize - 4), Color.white);
+        }
+
+        private static void AddLabel(Transform parent, string name, string text, int fontSize, Vector2 anchoredPos, FontStyle style, TextAnchor anchor, Vector2 size, Color color)
         {
             var go = new GameObject(name, typeof(RectTransform));
             go.transform.SetParent(parent, false);
@@ -58,11 +89,11 @@ namespace LearnAIGame.Gameplay
 
             var label = go.AddComponent<Text>();
             label.text = text;
-            label.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            label.font = UIFactory.GetPlayfulFont();
             label.fontSize = fontSize;
             label.fontStyle = style;
             label.alignment = anchor;
-            label.color = Color.white;
+            label.color = color;
             label.horizontalOverflow = HorizontalWrapMode.Wrap;
             label.verticalOverflow = VerticalWrapMode.Overflow;
         }
