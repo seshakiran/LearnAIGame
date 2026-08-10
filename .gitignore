@@ -8,6 +8,7 @@ UnityProject/Logs/
 UnityProject/UserSettings/
 UnityProject/MemoryCaptures/
 UnityProject/.vs/
+UnityProject/.vscode/
 UnityProject/.vsconfig
 *.csproj
 *.sln
