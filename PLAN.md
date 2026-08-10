@@ -48,12 +48,28 @@ Companies aren't hiring for "knows AI facts" — that's ubiquitous and worthless
 
 ## 3. Core Loop
 
-1. **Play** — quick casual round (merge/match style), zero learning content visible. Must stand alone as fun.
+1. **Play** — quick casual round of swipe-to-judge cards (§3.1), zero learning framing visible, just fast right/wrong reflex calls. Must stand alone as fun.
 2. **Micro-unlock trigger** — hitting a score/streak threshold pauses the game on a win, not a loss.
-3. **Feynman moment** — 15s video, simple explanation of the AI concept, visually tied to the mechanic just played. Pre-generated and cached per topic (via Grok, in the content pipeline — not generated live at unlock time, to avoid killing reward-timing with latency).
-4. **One-tap checkpoint** — single fast question, styled as a game interaction (drag/tap), not a quiz UI. Gate is felt in seconds, not as homework.
+3. **Feynman moment** — 15s video, simple explanation of the AI concept, tied to the judgment call just made in the swipe burst (e.g., the round was about spotting hallucinations; the video explains why models hallucinate). Pre-generated and cached per topic (via Grok, in the content pipeline — not generated live at unlock time, to avoid killing reward-timing with latency).
+4. **One-tap checkpoint** — single fast question, same swipe-card format as gameplay, not a separate quiz UI. Gate is felt in seconds, not as homework.
 5. **Payoff** — game snippet/skin/level unlocks immediately. Loop back to step 1.
-6. **Boss level** (every 3–5 topics) — real multi-question assessment, harder, untimed. This is what the certificate actually vouches for — it needs real rigor, not a rubber stamp.
+6. **Boss level** (every 3–5 topics) — real multi-question assessment, harder, untimed, full-context scenarios (not card-constrained). This is what the certificate actually vouches for — it needs real rigor, not a rubber stamp.
+
+### 3.1 Core Mechanic: Swipe-to-Judge
+
+Two-alternative forced choice, swipe left/right, instant reveal-and-explain. One system reused everywhere — only the content slot changes per topic/path. This mechanic is not a reskin: the act of judging right-vs-wrong-fast is a direct, simplified rehearsal of the exact skill the certificate later tests at depth (§2.4) — the casual game trains the fast/intuitive version, boss levels test the slow/deliberate version of the same skill.
+
+**Locked card types:**
+- **"AI or Human?"** — a short text/code/image snippet; swipe AI-made vs. human-made, reveal with a one-line tell. Precedent: "Which Face Is Real," "AI or Not" apps/trends — already culturally primed to be shareable ("I got 8/10").
+- **"Real answer or confident hallucination?"** — two AI-generated answers to the same question, one correct, one fluent-but-wrong; swipe to pick which you'd trust. Most direct rehearsal of §2.4's core target skill. Precedent: Cambridge's "Bad News" game (peer-reviewed in Palgrave Communications, measurably improved real-world misinformation detection) — the strongest evidence available that this exact mechanic produces a transferable skill, not just entertainment.
+- **"Ship it or don't"** — an AI-generated output shown with a specific constraint ("2 days, payments flow"), swipe ship vs. hold. PM-path-weighted; tests tradeoff judgment (§2.4).
+- **"Would this bite you later?"** — a code/architecture choice that looks fine now; swipe fine vs. technical-debt bomb. Engineer-path-weighted version of the same tradeoff-judgment test.
+
+**Content-density principle (cards are small, judgment content is not always small — resolve by architecture, not compression):**
+- **Hard content budget per card**, enforced in the content pipeline (§5), not fixed later in UI: one sentence, one 3-5 line snippet, or one image. If a scenario needs more context than that to judge fairly, it does not belong on a card — it belongs in a boss level.
+- **Recognition over reading**: consistent visual template per card type (same layout every time), syntax highlighting, icons, color-coding — returning users pattern-match the format instantly instead of reading fresh each time.
+- **Two-layer depth**: the card is the fast System-1 gut-check; the one-line "why" lives in the reveal-after-swipe, once the user isn't time-pressured anymore (predict-then-explain — testing before teaching improves retention).
+- **Genuinely ambiguous/context-heavy judgment calls are deliberately excluded from card format entirely** and reserved for boss levels, which are untimed and full-screen. The swipe layer and the assessment layer must not be made to do the same job.
 
 ## 4. Curriculum Architecture
 
@@ -85,6 +101,8 @@ Companies aren't hiring for "knows AI facts" — that's ubiquitous and worthless
 - Curriculum-tied leaderboards ("topics mastered this week") per path, not just game score.
 - Rotating limited-time topics (§4).
 - Invite scarcity + shareable certificate = the growth loop, in place of open marketing.
+- **Wordle-style shareable result card**: after each swipe burst, a lightweight "you got 7/10, streak: 12 days" result card, shareable outside the app. Distinct from the certificate — this is the *daily* viral loop (low stakes, frequent), while the certificate is the *prestige* viral loop (high stakes, rare). Wordle's virality came from the shareable result grid, not the puzzle itself — same principle applies here.
+- **Leaderboards paired with the shareable result**: daily/weekly rank alongside the streak, so sharing a result also implicitly shares standing — gives people a reason to want to be seen playing, not just to have played.
 
 ## 9. Platform & Hiring Layer (Phase 2 — only after core game + certificate proves out)
 
