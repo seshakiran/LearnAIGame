@@ -71,6 +71,33 @@ Two-alternative forced choice, swipe left/right, instant reveal-and-explain. One
 - **Two-layer depth**: the card is the fast System-1 gut-check; the one-line "why" lives in the reveal-after-swipe, once the user isn't time-pressured anymore (predict-then-explain — testing before teaching improves retention).
 - **Genuinely ambiguous/context-heavy judgment calls are deliberately excluded from card format entirely** and reserved for boss levels, which are untimed and full-screen. The swipe layer and the assessment layer must not be made to do the same job.
 
+### 3.2 Worked Example: "Why AI Lies With Confidence" (Hallucinations Topic)
+
+Illustrates the full cadence: micro-loop runs every few minutes per topic; boss level is a separate, slower gate every 3-5 topics; leaderboard/shareable result runs continuously in parallel to both.
+
+**1. Swipe burst (~15 sec, 6-8 cards, "Real answer or confident hallucination?" format)**
+- Card: *"When was the Eiffel Tower built?"* — two AI answers flash: **A)** "1889" **B)** "1887, based on Gustave Eiffel's original blueprint filed in 1885." Swipe the one you'd trust.
+- Reveal: "A is correct. B *sounds* more credible because it's more specific — that's the trap. Models add plausible-sounding detail, not more truth."
+- Following cards repeat the pattern with new examples (a fake citation, a made-up statistic, a real one), timer ticking, combo streak building.
+- Burst ends: **"7/8 correct — 4 day streak"** — Wordle-style shareable result card (§8), postable outside the app.
+
+**2. Micro-unlock trigger** — score threshold hit, game pauses on the win screen, not mid-burst.
+
+**3. Feynman video (15 sec)** — *"An AI isn't looking up facts — it's predicting the most likely-sounding next words. That's why 'Gustave Eiffel's blueprint filed in 1885' sounded so believable in the card you just swiped — it's not lying on purpose, it's just really good at sounding right."* Directly references the card just swiped.
+
+**4. One-tap checkpoint** — one new card, same format: *"Real quote or fabricated one?"* — single swipe, instant.
+
+**5. Payoff** — next tile on the skill-tree map lights up, small cosmetic/skin unlock. Loop back to step 1 with the next topic (e.g. "Bias in Training Data").
+
+*...micro-loop repeats for topics 2, 3, 4 (bias, RAG, prompt injection)...*
+
+**6. Boss level (after topics 1-4 are done)** — different screen entirely, no swiping, untimed, full context allowed:
+> *"Your team's support bot told a customer their refund was denied, citing 'section 4.2 of the return policy' — a section that doesn't exist. Users didn't catch it and escalated. What's the actual root cause, and what would you change in the system (not just the model) to prevent this recurring?"* — pick the best of 4 detailed options, or short-justify.
+
+Passing it unlocks a certificate milestone ("Foundations of AI Judgment — Certified") that rolls up toward the full path certificate, plus the next skill-tree branch.
+
+**7. Leaderboard** — runs the whole time in the background: daily board shows swipe-burst streaks/scores, weekly board shows "topics mastered" (curriculum-tied, per §8), separate from and slower-cadence than the daily shareable result card.
+
 ## 4. Curriculum Architecture
 
 - Multiple **paths** (e.g. Product Manager, Hands-on Engineer, ...). Same core loop, different topic sequences and boss-level content depth.
@@ -151,3 +178,33 @@ Sell companies on the differentiation thesis directly (§2.6): not a talent pool
 - **Phase 5 — Second curriculum path + polish**: expand from pilot path to second path, leaderboards, streaks, rotating topics.
 - **Phase 6 — Placement layer (concierge)**: manual introductions of first certified cohort to pilot hiring companies (§9.2), no platform tech yet — validate companies will actually hire off the certificate.
 - **Phase 7+ — Platform/hiring tech** *(only if Phase 6 validates)*: build matching/placement tooling for companies to register and find certified people (§9). Marketplace/gig model explicitly out of scope unless revisited later.
+
+## 12. Phase 0 Spike Spec
+
+Two independent spikes, testing two different risks. Neither depends on the other and they can run in parallel.
+
+### 12.1 Spike A — Core loop feel
+
+**Question it needs to answer:** is the swipe-to-judge micro-loop (§3, §3.1) actually fun standalone, and does the AI content feel integrated rather than bolted-on (the "jarring" risk raised earlier in design)?
+
+**Build:** minimal/gray-box Unity prototype implementing one full micro-loop pass using the §3.2 worked example ("Why AI Lies With Confidence"):
+- Swipe burst of 6-8 "Real answer or confident hallucination?" cards, using the Eiffel Tower example plus a few more written to the same pattern.
+- Timer + combo streak scoring, win-screen pause on threshold.
+- Feynman video slot (placeholder video/voiceover acceptable if Spike B isn't done yet — the point is to test the *loop*, not final video production quality).
+- One-tap checkpoint card.
+- Payoff screen (can be a stub — a single skill-tree tile lighting up is enough).
+- Shareable result card (§8) — even a static mockup of the share image is enough to test reaction.
+
+Art/animation polish is explicitly not required — this is about mechanic feel and pacing, not visual fidelity.
+
+**Explicitly out of scope for this spike:** boss levels, leaderboards (beyond a stub), invite/paid gating, certificate issuance, second topic/path, backend integration. None of these are needed to answer the core question.
+
+**Success criteria:** run with a handful of real external testers (not just the builder — self-testing can't validate "does this feel fun" or "does this feel jarring"). Ask two separate questions after the session: (1) did the swipe burst feel fun on its own, before any AI framing was explained, and (2) did the video/checkpoint feel connected to what was just played, or did it feel like an ad interrupting a game. A "no" on either is a real signal to revise the mechanic or the content-tie-in, not just tune numbers.
+
+### 12.2 Spike B — Grok HITL video pipeline
+
+**Question it needs to answer:** what does the actual production pipeline (record → human review → upload → host) look like end-to-end, and how long does one topic's video realistically take — this determines how many topics can be ready for a real launch.
+
+**Build:** produce one real Feynman video for the hallucinations topic (§3.2, step 3 script) through the full HITL Grok pipeline, upload it to a hosting location, and confirm Unity can stream/play it from that URL.
+
+**Success criteria:** the pipeline works end-to-end without manual workarounds, and there's a real time-per-topic estimate to plan content production against for Phase 2 onward.
