@@ -106,20 +106,27 @@ This is explicitly a second phase. Do not build this in parallel with the core l
 
 Sell companies on the differentiation thesis directly (§2.6): not a talent pool, a judgment-vetting layer. The pitch is "we test for catching AI mistakes, making tradeoff calls, and critically evaluating output — the things a normal resume or interview loop doesn't test for, and the things that matter more as AI-generated work volume increases in your org."
 
-## 10. Open Decisions (need your input before implementation planning)
+## 10. Tech Stack Decisions
 
-- **Platform**: iOS/Android native, or cross-platform (React Native, given your Syncbook experience)? Web app? Which is primary launch target?
-- **Game engine/tech**: native game framework vs. something like Unity, vs. a lighter custom canvas/game-loop built in RN/web?
-- **Video generation**: is Grok's video capability confirmed accessible for this use case — has this been tested, or does it need a feasibility spike first?
+### 10.1 Locked
+
+- **Platform**: mobile-first, both iOS and Android. A marketing web page directs prospects to the app; the app itself is where the product lives.
+- **Game engine**: **Unity**. Single codebase for iOS + Android, proven for casual match/merge mechanics (particle effects, tweening, physics, juicy game-feel), mature IAP/ads/analytics plugin ecosystem for paid + invite gating. Covers the full learner-facing app (game loop, video unlocks, checkpoints, boss levels, certificate display) through Phase 0-5.
+  - Architectural note: Unity is not the right tool for the company/hiring-facing side. §9's Platform & Hiring Layer (Phase 6-7) should be a **separate web dashboard**, not built inside Unity — company users searching for talent are desktop/business users, and that's an admin/search surface, not a game surface. The web page that directs prospects to the app becomes the same web layer's home for the future company portal.
+- **Video content pipeline**: Grok video generation is **HITL-controlled, not on-the-fly** — clips are pre-recorded and uploaded to a hosting location ahead of time. This confirms the §5 design assumption (cached, not live-generated at unlock time) — no latency risk to the reward-timing in the core loop. Unity streams/plays clips from wherever they're hosted (CDN/cloud storage) via URL.
+
+### 10.2 Still open (need your input)
+
 - **Team/solo**: are you building this solo with me, or is there a team (content, design, backend)?
 - **Timeline**: how many weeks realistically available, and is there a target launch trigger (event, cohort, waitlist size)?
 - **Invite system infra**: how are invites generated/tracked — simple codes, waitlist + manual approval, referral chains?
 - **Certificate verification infra**: hosted verification page, PDF + QR, or integration with an existing credentialing standard (e.g. Open Badges)?
+- **Backend**: Unity is the client — needs an API/backend for content delivery, checkpoint/assessment tracking, invite codes, and certificate issuance. No stack chosen yet.
 
-## 11. Proposed Phase Breakdown (to refine once §10 is answered)
+## 11. Proposed Phase Breakdown (to refine once §10.2 is answered)
 
-- **Phase 0 — Feasibility spikes**: confirm Grok video generation works for the Feynman-clip use case; validate core game loop is fun standalone (paper prototype or minimal build).
-- **Phase 1 — Core game loop**: build the standalone casual game (no learning layer yet), get it feeling good.
+- **Phase 0 — Feasibility spikes**: set up the Grok HITL video pipeline (record → review → upload → host) end to end for one topic; validate core game loop is fun standalone (paper prototype or minimal Unity build).
+- **Phase 1 — Core game loop**: build the standalone casual game in Unity (no learning layer yet), get it feeling good.
 - **Phase 2 — Learning layer**: wire in Feynman video unlock, one-tap checkpoint, topic content for one path (pilot with ~5-10 topics), all designed against the judgment-based assessment principles in §2.4.
 - **Phase 3 — Boss levels + certificate**: judgment-scenario assessment engine, certificate issuance + verification.
 - **Phase 4 — Access system**: invite codes, paid gating, waitlist.
