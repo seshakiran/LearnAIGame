@@ -54,7 +54,7 @@ namespace LearnAIGame.Gameplay
             public Vector2 basePos;
         }
 
-        public static SwipeCardView Create(Transform parent, JudgmentCard card)
+        public static SwipeCardView Create(Transform parent, JudgmentCard card, string eyebrow = null)
         {
             var root = new GameObject($"Card_{card.id}", typeof(RectTransform));
             root.transform.SetParent(parent, false);
@@ -118,7 +118,16 @@ namespace LearnAIGame.Gameplay
             var faceHalfHeight = faceSize.y / 2f;
             var faceHalfWidth = faceSize.x / 2f;
 
-            UIFactory.CreateLabel(faceGo.transform, card.prompt, 40, new Vector2(0, faceHalfHeight - 130f), new Vector2(faceSize.x - 84, 220),
+            if (!string.IsNullOrEmpty(eyebrow))
+            {
+                UIFactory.CreateLabel(faceGo.transform, eyebrow.ToUpperInvariant(), 16, new Vector2(0, faceHalfHeight - 44f), new Vector2(faceSize.x - 84, 30),
+                    TextAnchor.UpperLeft, FontStyle.Bold, GamePalette.WithAlpha(GamePalette.TextMuted, 0.72f));
+                var eyebrowTick = UIFactory.CreateSurface(faceGo.transform, GamePalette.Lime,
+                    new Vector2(-faceHalfWidth + 42f + 16f, faceHalfHeight - 64f), new Vector2(32, 3), 0, "EyebrowTick");
+                eyebrowTick.raycastTarget = false;
+            }
+
+            UIFactory.CreateLabel(faceGo.transform, card.prompt, 40, new Vector2(0, faceHalfHeight - 150f), new Vector2(faceSize.x - 84, 220),
                 TextAnchor.UpperLeft, FontStyle.Bold, GamePalette.TextLight, autoShrink: true, minFontSize: 26);
 
             const float chipW = 270f, chipH = 146f;
@@ -126,8 +135,8 @@ namespace LearnAIGame.Gameplay
             var chipAX = -faceHalfWidth + 42f + chipW / 2f;
             var chipBX = faceHalfWidth - 42f - chipW / 2f;
 
-            view._chipA = BuildChip(faceGo.transform, "A", card.optionA, new Vector2(chipAX, chipY), GamePalette.ChoiceA, innerSideIsRight: true);
-            view._chipB = BuildChip(faceGo.transform, "B", card.optionB, new Vector2(chipBX, chipY), GamePalette.ChoiceB, innerSideIsRight: false);
+            view._chipA = BuildChip(faceGo.transform, "A", card.optionA, new Vector2(chipAX, chipY), GamePalette.ChoiceA, badgeAtRightEdge: false);
+            view._chipB = BuildChip(faceGo.transform, "B", card.optionB, new Vector2(chipBX, chipY), GamePalette.ChoiceB, badgeAtRightEdge: true);
 
             // Tinder-style drag stamps — hidden at rest, fade/scale/settle in toward
             // whichever side the card is dragged, confirming direction (never outcome).
@@ -142,7 +151,7 @@ namespace LearnAIGame.Gameplay
             return view;
         }
 
-        private static ChipRefs BuildChip(Transform parent, string letter, string text, Vector2 anchoredPos, Color accent, bool innerSideIsRight)
+        private static ChipRefs BuildChip(Transform parent, string letter, string text, Vector2 anchoredPos, Color accent, bool badgeAtRightEdge)
         {
             const float chipW = 270f, chipH = 146f;
 
@@ -185,25 +194,28 @@ namespace LearnAIGame.Gameplay
             UIFactory.CreateLabel(face.transform, text, 25, new Vector2(12, 0), new Vector2(chipW - 66, chipH - 20),
                 TextAnchor.MiddleLeft, FontStyle.Bold, GamePalette.WithAlpha(GamePalette.TextLight, 0.96f), autoShrink: true, minFontSize: 22);
 
-            // Badge sits near the inner-top corner where the two chips meet, 6pt above
-            // the chip's own top edge and 20pt in from the inner (center-facing) side.
-            var badgeX = innerSideIsRight ? chipW / 2f - 20f : -(chipW / 2f - 20f);
-            var badgeY = chipH / 2f + 6f;
+            // Badge sits on the chip's own outer top corner (away from the other chip),
+            // overlapping the top edge — matches the Manus reference mockup, not the
+            // spec doc's "inner side" text, which the mockup itself doesn't follow.
+            var badgeX = badgeAtRightEdge ? chipW / 2f - 26f : -(chipW / 2f - 26f);
+            var badgeY = chipH / 2f + 4f;
 
             var badgeShadow = UIFactory.CreateSurface(chipRoot.transform, GamePalette.WithAlpha(GamePalette.BackgroundDeep, 0.88f),
                 new Vector2(badgeX, badgeY - 5), new Vector2(58, 58), 29, "BadgeShadow");
             badgeShadow.raycastTarget = false;
             var badgeHalo = UIFactory.CreateSurface(chipRoot.transform, GamePalette.WithAlpha(accent, 0.18f),
-                new Vector2(badgeX, badgeY), new Vector2(60, 60), 30, "BadgeHalo");
+                new Vector2(badgeX, badgeY), new Vector2(64, 64), 32, "BadgeHalo");
             badgeHalo.raycastTarget = false;
-            var badgeEdge = UIFactory.CreateSurface(chipRoot.transform, GamePalette.WithAlpha(GamePalette.TextLight, 0.16f),
-                new Vector2(badgeX, badgeY), new Vector2(52, 52), 26, "BadgeEdge");
-            badgeEdge.raycastTarget = false;
-            var badgeFill = UIFactory.CreateSurface(chipRoot.transform, accent,
-                new Vector2(badgeX, badgeY), new Vector2(48, 48), 24, "BadgeFill");
+            // Hollow ring: an accent-filled circle with a slightly smaller dark circle
+            // on top leaves only a ~3pt accent rim, with the glyph in accent (not dark).
+            var badgeRing = UIFactory.CreateSurface(chipRoot.transform, accent,
+                new Vector2(badgeX, badgeY), new Vector2(52, 52), 26, "BadgeRing");
+            badgeRing.raycastTarget = false;
+            var badgeFill = UIFactory.CreateSurface(chipRoot.transform, GamePalette.ScreenSurface,
+                new Vector2(badgeX, badgeY), new Vector2(46, 46), 23, "BadgeFill");
             badgeFill.raycastTarget = false;
-            UIFactory.CreateLabel(badgeFill.transform, letter, 25, Vector2.zero, new Vector2(44, 44),
-                TextAnchor.MiddleCenter, FontStyle.Bold, GamePalette.ScreenSurface);
+            UIFactory.CreateLabel(badgeFill.transform, letter, 24, Vector2.zero, new Vector2(42, 42),
+                TextAnchor.MiddleCenter, FontStyle.Bold, accent);
 
             return new ChipRefs { group = chipGroup, scaleRoot = chipRoot.transform, contour = contour, glow = glow };
         }

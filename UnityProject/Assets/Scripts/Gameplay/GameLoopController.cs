@@ -119,7 +119,7 @@ namespace LearnAIGame.Gameplay
 
         private IEnumerator PlayCard(JudgmentCard card, bool isCheckpoint)
         {
-            var cardView = SwipeCardView.Create(_canvas.transform, card);
+            var cardView = SwipeCardView.Create(_canvas.transform, card, _burst.topicTitle);
             SwipeSide? chosenSide = null;
             cardView.OnSwiped += side => chosenSide = side;
 
