@@ -101,33 +101,34 @@ namespace LearnAIGame.Gameplay
             faceImg.type = Image.Type.Sliced;
             faceImg.color = GamePalette.CardSurface;
 
-            // Gradient approximation (stock UGUI has no gradient material): a top wash
-            // and a bottom falloff, inset enough from the face edges to clear its own
-            // rounded corners rather than poking a square corner past the curve.
-            var faceHalfW = faceSize.x / 2f - 36f;
-            var topWash = UIFactory.CreateSurface(faceGo.transform, GamePalette.WithAlpha(GamePalette.ChipSurface, 0.48f),
-                new Vector2(0, faceSize.y / 2f - 75f), new Vector2(faceHalfW * 2f, 150), 0, "FaceTopWash");
-            topWash.raycastTarget = false;
-            var bottomWash = UIFactory.CreateSurface(faceGo.transform, GamePalette.WithAlpha(GamePalette.CardSurface, 0.38f),
-                new Vector2(0, -faceSize.y / 2f + 110f), new Vector2(faceHalfW * 2f, 220), 0, "FaceBottomWash");
-            bottomWash.raycastTarget = false;
-            var innerHighlight = UIFactory.CreateSurface(faceGo.transform, GamePalette.WithAlpha(GamePalette.TextLight, 0.04f),
-                new Vector2(0, faceSize.y / 2f - 47f), new Vector2(faceHalfW * 2f - 20f, 84), 0, "InnerHighlight");
-            innerHighlight.raycastTarget = false;
-
+            // The spec's gradient approximation (clipped top/bottom wash overlays) sits
+            // directly behind the prompt/chip text with no clip mask to soften it, so any
+            // visible alpha step reads as a stray highlighted rectangle rather than a
+            // gradient. A flat face color avoids that seam entirely and still matches the
+            // reference mockup's actual (very subtle) contrast.
             var faceHalfHeight = faceSize.y / 2f;
             var faceHalfWidth = faceSize.x / 2f;
 
+            // Lay out top-down from a cursor so the eyebrow/tick/prompt never overlap
+            // regardless of whether the eyebrow is present.
+            var cursorTop = faceHalfHeight - 34f;
+
             if (!string.IsNullOrEmpty(eyebrow))
             {
-                UIFactory.CreateLabel(faceGo.transform, eyebrow.ToUpperInvariant(), 16, new Vector2(0, faceHalfHeight - 44f), new Vector2(faceSize.x - 84, 30),
-                    TextAnchor.UpperLeft, FontStyle.Bold, GamePalette.WithAlpha(GamePalette.TextMuted, 0.72f));
+                const float eyebrowHeight = 22f;
+                UIFactory.CreateLabel(faceGo.transform, eyebrow.ToUpperInvariant(), 16, new Vector2(0, cursorTop - eyebrowHeight / 2f), new Vector2(faceSize.x - 84, eyebrowHeight),
+                    TextAnchor.MiddleLeft, FontStyle.Bold, GamePalette.WithAlpha(GamePalette.TextMuted, 0.72f));
+                cursorTop -= eyebrowHeight + 10f;
+
+                const float tickHeight = 3f;
                 var eyebrowTick = UIFactory.CreateSurface(faceGo.transform, GamePalette.Lime,
-                    new Vector2(-faceHalfWidth + 42f + 16f, faceHalfHeight - 64f), new Vector2(32, 3), 0, "EyebrowTick");
+                    new Vector2(-faceHalfWidth + 42f + 16f, cursorTop - tickHeight / 2f), new Vector2(32, tickHeight), 0, "EyebrowTick");
                 eyebrowTick.raycastTarget = false;
+                cursorTop -= tickHeight + 22f;
             }
 
-            UIFactory.CreateLabel(faceGo.transform, card.prompt, 40, new Vector2(0, faceHalfHeight - 150f), new Vector2(faceSize.x - 84, 220),
+            const float promptHeight = 220f;
+            UIFactory.CreateLabel(faceGo.transform, card.prompt, 40, new Vector2(0, cursorTop - promptHeight / 2f), new Vector2(faceSize.x - 84, promptHeight),
                 TextAnchor.UpperLeft, FontStyle.Bold, GamePalette.TextLight, autoShrink: true, minFontSize: 26);
 
             const float chipW = 270f, chipH = 146f;
@@ -182,14 +183,6 @@ namespace LearnAIGame.Gameplay
             var face = UIFactory.CreateSurface(chipRoot.transform, GamePalette.CardSurface,
                 Vector2.zero, new Vector2(chipW - 6, chipH - 6), 20, "ChipFace");
             face.raycastTarget = false;
-
-            var topWash = UIFactory.CreateSurface(face.transform, GamePalette.WithAlpha(GamePalette.ChipSurface, 0.55f),
-                new Vector2(0, (chipH - 6) / 2f - 30f), new Vector2(chipW - 46, (chipH - 6) * 0.55f), 0, "ChipTopWash");
-            topWash.raycastTarget = false;
-
-            var glint = UIFactory.CreateSurface(face.transform, GamePalette.WithAlpha(GamePalette.TextLight, 0.05f),
-                new Vector2(0, (chipH - 6) / 2f - 16f), new Vector2(chipW - 46, 32), 0, "ChipTopGlint");
-            glint.raycastTarget = false;
 
             UIFactory.CreateLabel(face.transform, text, 25, new Vector2(12, 0), new Vector2(chipW - 66, chipH - 20),
                 TextAnchor.MiddleLeft, FontStyle.Bold, GamePalette.WithAlpha(GamePalette.TextLight, 0.96f), autoShrink: true, minFontSize: 22);
