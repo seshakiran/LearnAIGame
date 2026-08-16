@@ -15,11 +15,21 @@ namespace LearnAIGame.Gameplay
         {
             var panel = UIFactory.CreateFullScreenPanel(canvasParent, GamePalette.ScreenSurface, "TopicPathPanel");
 
-            UIFactory.CreateLabel(panel, "Your Path", 40, new Vector2(0, 440), new Vector2(700, 60), TextAnchor.MiddleCenter, FontStyle.Bold, GamePalette.TextLight);
+            // The layout below (title/subtitle/node positions) was tuned for a tall
+            // phone aspect. Those fixed offsets are kept as-is whenever there's enough
+            // room, but on a shorter/wider aspect (e.g. the Editor Game view's default
+            // window shape) they'd push the CTA button off-screen and unreachable, so
+            // everything is clamped against the panel's actual rendered height.
+            var halfHeight = Mathf.Max(panel.rect.height / 2f, 480f);
+
+            var titleY = Mathf.Min(440f, halfHeight - 60f);
+            var subtitleY = Mathf.Min(395f, halfHeight - 105f);
+
+            UIFactory.CreateLabel(panel, "Your Path", 40, new Vector2(0, titleY), new Vector2(700, 60), TextAnchor.MiddleCenter, FontStyle.Bold, GamePalette.TextLight);
 
             var lap = topicsCompletedThisSession / topicTitles.Length + 1;
-            var subtitle = lap > 1 ? $"Lap {lap} — reinforcing what you've already covered" : "4 topics in this Foundations path";
-            UIFactory.CreateLabel(panel, subtitle, 18, new Vector2(0, 395), new Vector2(780, 40), TextAnchor.MiddleCenter, FontStyle.Normal, GamePalette.TextMuted);
+            var subtitle = lap > 1 ? $"Lap {lap} — reinforcing what you've already covered" : $"{topicTitles.Length} topics in this Foundations path";
+            UIFactory.CreateLabel(panel, subtitle, 18, new Vector2(0, subtitleY), new Vector2(780, 40), TextAnchor.MiddleCenter, FontStyle.Normal, GamePalette.TextMuted);
 
             var completedInLap = topicsCompletedThisSession % topicTitles.Length;
             // A full lap finished right before this screen shows — treat all 4 as done
@@ -30,10 +40,18 @@ namespace LearnAIGame.Gameplay
             }
 
             const float nodeSize = 96f;
-            const float spacing = 240f;
             const float nodeX = -280f;
             const float labelX = -20f;
-            const float startY = 300f;
+
+            var startY = Mathf.Min(300f, halfHeight - 170f);
+            var buttonY = Mathf.Max(-620f, -halfHeight + 90f); // never let the CTA fall below the visible screen
+
+            var spacing = 240f;
+            if (topicTitles.Length > 1)
+            {
+                var maxSpacing = (startY - (buttonY + 140f)) / (topicTitles.Length - 1);
+                spacing = Mathf.Min(spacing, Mathf.Max(maxSpacing, 60f));
+            }
 
             for (var i = 0; i < topicTitles.Length; i++)
             {
@@ -43,7 +61,7 @@ namespace LearnAIGame.Gameplay
                 {
                     var connectorDone = i <= completedInLap;
                     var connector = UIFactory.CreateSurface(panel, connectorDone ? GamePalette.Lime : GamePalette.CardSurface,
-                        new Vector2(nodeX, y + spacing / 2f), new Vector2(6, spacing - nodeSize), 3, $"Connector{i}");
+                        new Vector2(nodeX, y + spacing / 2f), new Vector2(6, Mathf.Max(4f, spacing - nodeSize)), 3, $"Connector{i}");
                     connector.raycastTarget = false;
                 }
 
@@ -67,7 +85,7 @@ namespace LearnAIGame.Gameplay
 
             var tapped = false;
             var buttonLabel = topicsCompletedThisSession == 0 ? "Start →" : "Continue →";
-            UIFactory.CreateButton(panel, buttonLabel, new Vector2(0, -620), new Vector2(300, 90), () => tapped = true, GamePalette.Lime, GamePalette.TextDark);
+            UIFactory.CreateButton(panel, buttonLabel, new Vector2(0, buttonY), new Vector2(300, 90), () => tapped = true, GamePalette.Lime, GamePalette.TextDark);
 
             yield return new WaitUntil(() => tapped);
             Object.Destroy(panel.gameObject);
