@@ -32,8 +32,12 @@ namespace LearnAIGame.Video
 
             // Fit the clip's native aspect ratio inside the available area instead of
             // stretching it — a RawImage doesn't preserve source aspect ratio on its own.
-            var availableWidth = (float)Screen.width;
-            var availableHeight = Mathf.Max(Screen.height - 280f, 16f);
+            // panel.rect is in the Canvas's scaled reference-resolution units, not raw
+            // device pixels — using Screen.width/height here mismatched units and made
+            // the video render tiny (Editor's small Game view) or oversized (a real
+            // phone's much higher raw pixel count) depending on the device.
+            var availableWidth = panel.rect.width;
+            var availableHeight = Mathf.Max(panel.rect.height - 280f, 16f);
             var clipAspect = (float)clip.width / clip.height;
             var fitWidth = availableWidth;
             var fitHeight = fitWidth / clipAspect;
@@ -70,7 +74,8 @@ namespace LearnAIGame.Video
             var finished = false;
             videoPlayer.loopPointReached += _ => finished = true;
 
-            UIFactory.CreateButton(panel, "Skip ▶", new Vector2(0, -820), new Vector2(240, 80), () => skipped = true, Color.white, new Color(0f, 0f, 0f, 0.5f));
+            var skipY = Mathf.Max(-820f, -panel.rect.height / 2f + 90f);
+            UIFactory.CreateButton(panel, "Skip ▶", new Vector2(0, skipY), new Vector2(240, 80), () => skipped = true, Color.white, new Color(0f, 0f, 0f, 0.5f));
 
             videoPlayer.Prepare();
             yield return new WaitUntil(() => videoPlayer.isPrepared || skipped);
