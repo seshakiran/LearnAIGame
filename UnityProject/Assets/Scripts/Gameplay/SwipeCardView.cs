@@ -17,6 +17,8 @@ namespace LearnAIGame.Gameplay
         private Vector2 _dragStartPos;
         private Vector2 _cardStartAnchoredPos;
         private bool _committed;
+        private CanvasGroup _leftStamp;
+        private CanvasGroup _rightStamp;
 
         private const float SwipeThreshold = 160f;
         private const float MaxRotationDegrees = 12f;
@@ -61,10 +63,52 @@ namespace LearnAIGame.Gameplay
             BuildChoiceChip(faceGo.transform, "A", card.optionA, new Vector2(-150, -260), GamePalette.ChoiceA);
             BuildChoiceChip(faceGo.transform, "B", card.optionB, new Vector2(150, -260), GamePalette.ChoiceB);
 
+            // Tinder-style drag stamps — hidden at rest, fade in toward whichever side
+            // the card is being dragged, live proof the gesture is registering and which
+            // option a release would commit to.
+            view._leftStamp = BuildDragStamp(faceGo.transform, "A", new Vector2(-210, 260), GamePalette.ChoiceA, tiltDegrees: 14f);
+            view._rightStamp = BuildDragStamp(faceGo.transform, "B", new Vector2(210, 260), GamePalette.ChoiceB, tiltDegrees: -14f);
+
             var canvasGroup = root.AddComponent<CanvasGroup>();
             canvasGroup.blocksRaycasts = true;
 
             return view;
+        }
+
+        private static CanvasGroup BuildDragStamp(Transform parent, string letter, Vector2 anchoredPos, Color accent, float tiltDegrees)
+        {
+            var stampGo = new GameObject($"Stamp{letter}", typeof(RectTransform));
+            stampGo.transform.SetParent(parent, false);
+            var stampRect = stampGo.GetComponent<RectTransform>();
+            stampRect.anchorMin = stampRect.anchorMax = new Vector2(0.5f, 0.5f);
+            stampRect.anchoredPosition = anchoredPos;
+            stampRect.sizeDelta = new Vector2(120, 70);
+            stampRect.localRotation = Quaternion.Euler(0, 0, tiltDegrees);
+
+            var canvasGroup = stampGo.AddComponent<CanvasGroup>();
+            canvasGroup.alpha = 0f;
+            canvasGroup.blocksRaycasts = false;
+            canvasGroup.interactable = false;
+
+            var border = stampGo.AddComponent<Image>();
+            border.sprite = UIFactory.GetRoundedSprite(12);
+            border.type = Image.Type.Sliced;
+            border.color = accent;
+
+            var inset = new GameObject("Inset", typeof(RectTransform));
+            inset.transform.SetParent(stampGo.transform, false);
+            var insetRect = inset.GetComponent<RectTransform>();
+            insetRect.anchorMin = insetRect.anchorMax = new Vector2(0.5f, 0.5f);
+            insetRect.anchoredPosition = Vector2.zero;
+            insetRect.sizeDelta = new Vector2(112, 62);
+            var insetImg = inset.AddComponent<Image>();
+            insetImg.sprite = UIFactory.GetRoundedSprite(10);
+            insetImg.type = Image.Type.Sliced;
+            insetImg.color = GamePalette.CardSurface;
+
+            AddLabel(inset.transform, "StampLabel", letter, 32, Vector2.zero, FontStyle.Bold, TextAnchor.MiddleCenter, new Vector2(100, 56), accent);
+
+            return canvasGroup;
         }
 
         // Badge sits centered on top of the answer chip, like a Kahoot answer marker —
@@ -130,6 +174,10 @@ namespace LearnAIGame.Gameplay
             _rect.anchoredPosition = _cardStartAnchoredPos + delta;
             var rotationT = Mathf.Clamp(delta.x / SwipeThreshold, -1.5f, 1.5f);
             _rect.localRotation = Quaternion.Euler(0, 0, -rotationT * MaxRotationDegrees);
+
+            var stampT = Mathf.Clamp01(Mathf.Abs(delta.x) / SwipeThreshold);
+            _leftStamp.alpha = delta.x < 0 ? stampT : 0f;
+            _rightStamp.alpha = delta.x > 0 ? stampT : 0f;
         }
 
         public void OnEndDrag(PointerEventData eventData)
@@ -145,6 +193,8 @@ namespace LearnAIGame.Gameplay
             {
                 _rect.anchoredPosition = _cardStartAnchoredPos;
                 _rect.localRotation = Quaternion.identity;
+                _leftStamp.alpha = 0f;
+                _rightStamp.alpha = 0f;
             }
         }
 

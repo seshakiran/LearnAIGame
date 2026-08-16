@@ -35,13 +35,23 @@ namespace LearnAIGame.Gameplay
             rootRect.offsetMin = Vector2.zero;
             rootRect.offsetMax = Vector2.zero;
 
-            UIFactory.CreateLabel(root.transform, topicTitle, 24, new Vector2(0, 870), new Vector2(TrackWidth - 40, 40),
+            // Fixed offsets below were tuned for a tall phone aspect. Clamped against the
+            // root's actual rendered height so the header/hints stay on-screen on a
+            // shorter/wider viewport instead of rendering above/below the visible area
+            // (see TopicPathScreen for the same fix and the reasoning).
+            var halfHeight = Mathf.Max(rootRect.rect.height / 2f, 480f);
+            var titleY = Mathf.Min(870f, halfHeight - 30f);
+            var counterY = Mathf.Min(840f, halfHeight - 60f);
+            var trackY = Mathf.Min(810f, halfHeight - 90f);
+            var captionY = Mathf.Max(-770f, -halfHeight + 40f);
+
+            UIFactory.CreateLabel(root.transform, topicTitle, 24, new Vector2(0, titleY), new Vector2(TrackWidth - 40, 40),
                 TextAnchor.MiddleCenter, FontStyle.Bold, GamePalette.TextLight, autoShrink: true, minFontSize: 16);
 
-            var counterLabel = UIFactory.CreateLabel(root.transform, "", 16, new Vector2(0, 840), new Vector2(TrackWidth - 40, 26),
+            var counterLabel = UIFactory.CreateLabel(root.transform, "", 16, new Vector2(0, counterY), new Vector2(TrackWidth - 40, 26),
                 TextAnchor.MiddleCenter, FontStyle.Normal, GamePalette.TextMuted);
 
-            var track = UIFactory.CreateSurface(root.transform, GamePalette.CardSurface, new Vector2(0, 810), new Vector2(TrackWidth, 10), 5, "ProgressTrack");
+            var track = UIFactory.CreateSurface(root.transform, GamePalette.CardSurface, new Vector2(0, trackY), new Vector2(TrackWidth, 10), 5, "ProgressTrack");
 
             var fillGo = new GameObject("ProgressFill", typeof(RectTransform), typeof(Image));
             fillGo.transform.SetParent(track.transform, false);
@@ -58,13 +68,16 @@ namespace LearnAIGame.Gameplay
 
             // Static swipe-direction hints, pinned to the screen edges (not the card
             // itself) so they stay put while the card drags underneath them.
-            var leftHint = UIFactory.CreateLabel(root.transform, "‹", 48, new Vector2(-480, -60), new Vector2(80, 100),
+            var halfWidth = Mathf.Max(rootRect.rect.width / 2f, 380f);
+            var hintX = Mathf.Min(480f, halfWidth - 50f);
+
+            var leftHint = UIFactory.CreateLabel(root.transform, "‹", 48, new Vector2(-hintX, -60), new Vector2(80, 100),
                 TextAnchor.MiddleCenter, FontStyle.Bold, new Color(1f, 1f, 1f, 0.28f));
             leftHint.raycastTarget = false;
-            var rightHint = UIFactory.CreateLabel(root.transform, "›", 48, new Vector2(480, -60), new Vector2(80, 100),
+            var rightHint = UIFactory.CreateLabel(root.transform, "›", 48, new Vector2(hintX, -60), new Vector2(80, 100),
                 TextAnchor.MiddleCenter, FontStyle.Bold, new Color(1f, 1f, 1f, 0.28f));
             rightHint.raycastTarget = false;
-            var swipeCaption = UIFactory.CreateLabel(root.transform, "Swipe left or right to judge", 16, new Vector2(0, -770), new Vector2(700, 40),
+            var swipeCaption = UIFactory.CreateLabel(root.transform, "Swipe left or right to judge", 16, new Vector2(0, captionY), new Vector2(700, 40),
                 TextAnchor.MiddleCenter, FontStyle.Italic, GamePalette.TextMuted);
             swipeCaption.raycastTarget = false;
 
