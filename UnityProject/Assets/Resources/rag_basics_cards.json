@@ -1,0 +1,80 @@
+{
+  "topicId": "rag_basics",
+  "topicTitle": "When the Search Result Is Wrong",
+  "cardType": "real_or_hallucination",
+  "cards": [
+    {
+      "id": "rag01",
+      "prompt": "A travel bot retrieves a 2023 visa page and says your passport needs no visa this summer. Which answer should you trust?",
+      "optionA": "No visa is needed; the policy page clearly says so.",
+      "optionB": "Check the effective date and current official policy before relying on the retrieved page.",
+      "correctOption": "B",
+      "explanation": "Retrieval found a real page, just not necessarily a current one. A fluent answer can faithfully repeat stale evidence and still send you to the airport with a surprise."
+    },
+    {
+      "id": "rag02",
+      "prompt": "An employee asks about parental leave. The bot retrieves a contractor handbook and gives its rules as company policy. Which answer should you trust?",
+      "optionA": "The handbook is close enough; both groups work for the same company.",
+      "optionB": "Verify the document’s audience and policy scope before treating it as the employee’s answer.",
+      "correctOption": "B",
+      "explanation": "The wrong source can still be an official source. Retrieval needs a match on who the rule applies to, not just a keyword match on 'leave.'"
+    },
+    {
+      "id": "rag03",
+      "prompt": "A support bot cites a cached help article and tells a customer a feature is unavailable, though the release notes enabled it yesterday. Which answer should you trust?",
+      "optionA": "Trust the cached article; it is part of the bot’s approved knowledge base.",
+      "optionB": "Prefer the newer, authoritative release record and fix the stale retrieval source.",
+      "correctOption": "B",
+      "explanation": "Approved does not mean current forever. The answer is polished because the source is polished; that does not stop it being yesterday’s news."
+    },
+    {
+      "id": "rag04",
+      "prompt": "A procurement bot retrieves a blog post quoting a supplier's old pricing, then gives the quote with a citation. Which answer should you trust?",
+      "optionA": "Use the quote; the bot cited its source and the numbers are specific.",
+      "optionB": "Request the supplier’s current price sheet; a citation shows where the claim came from, not that it is current or binding.",
+      "correctOption": "B",
+      "explanation": "A source can be traceable and still be unsuitable for the decision. Citation is a clue to inspect, not a little gold star for correctness."
+    },
+    {
+      "id": "rag05",
+      "prompt": "A policy bot answers a UK tax question using a retrieved US IRS article because both mention 'self-employment expenses.' Which answer should you trust?",
+      "optionA": "The rule is probably the same; the article covers the same kind of expense.",
+      "optionB": "Do not apply it; jurisdiction is part of the question, so the retrieved source is off-target.",
+      "correctOption": "B",
+      "explanation": "Semantic search is good at finding similar words, not at noticing legal borders. The answer may be perfectly clear about the wrong country."
+    },
+    {
+      "id": "rag06",
+      "prompt": "An engineering assistant retrieves an archived API reference and recommends a parameter removed in v4. Which answer should you trust?",
+      "optionA": "Use the parameter; the archive is official documentation and includes an example.",
+      "optionB": "Use the version-matched reference; an official archive is still an archive.",
+      "correctOption": "B",
+      "explanation": "The model did retrieve documentation, just documentation for a different reality. Version labels are evidence, not decorative metadata."
+    },
+    {
+      "id": "rag07",
+      "prompt": "A health-plan assistant retrieves a summary page and says a treatment is covered, skipping the linked exclusions. Which answer should you trust?",
+      "optionA": "It is covered; the summary says the plan includes that treatment.",
+      "optionB": "Check the governing plan terms and exclusions before giving a coverage answer.",
+      "correctOption": "B",
+      "explanation": "A summary can be true and still incomplete for the case in front of you. Retrieval often grabs the friendly paragraph before the qualifying sentence hiding two clicks away."
+    },
+    {
+      "id": "rag08",
+      "prompt": "A campus bot retrieves two parking notices: one campus-wide and one for a single garage. It applies the garage closure to everyone. Which answer should you trust?",
+      "optionA": "All parking is closed; the notice was retrieved for a parking question.",
+      "optionB": "Check the location and scope; a relevant document may still answer a narrower question than the user asked.",
+      "correctOption": "B",
+      "explanation": "Search found a match on 'parking,' not necessarily on the whole situation. Good retrieval is not just finding a document; it is finding the document that governs this case."
+    }
+  ],
+  "checkpointCard": {
+    "id": "rag_checkpoint",
+    "prompt": "A bot says a refund window is 30 days, citing a policy page last updated before the company changed it to 14. Which answer should you trust?",
+    "optionA": "Honor 30 days because the bot produced a cited policy page.",
+    "optionB": "Verify the policy version and effective date; the citation may document a rule that no longer applies.",
+    "correctOption": "B",
+    "explanation": "The problem is not that the bot made up a page. It trusted an outdated one, which can look almost exactly as convincing."
+  },
+  "feynmanScript": "In those visa, leave, and API cards, the bot had sources — just the wrong, old, or too-narrow ones. Retrieval gives a model something to read; it does not guarantee the document governs your case. Check the date, audience, version, and scope before fluent becomes final."
+}

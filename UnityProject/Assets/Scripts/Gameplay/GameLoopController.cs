@@ -13,11 +13,22 @@ namespace LearnAIGame.Gameplay
     /// Drives: swipe burst -> video -> explanation -> leaderboard -> checkpoint -> payoff -> loop.
     public class GameLoopController : MonoBehaviour
     {
+        // Micro-loop topic order per PLAN.md §3.2 — cycles 1-4, then wraps for the
+        // next boss-level cluster once a boss level exists (§11 Phase 3).
+        private static readonly string[] TopicResourceNames =
+        {
+            "hallucination_cards",
+            "bias_training_data_cards",
+            "rag_basics_cards",
+            "prompt_injection_cards",
+        };
+
         private Canvas _canvas;
         private CardBurstData _burst;
         private BackgroundMusicPlayer _music;
         private int _score;
         private int _totalCards;
+        private int _topicIndex;
 
         private void Start()
         {
@@ -25,16 +36,24 @@ namespace LearnAIGame.Gameplay
             UIFactory.CreateFullScreenPanel(_canvas.transform, GamePalette.BackgroundDeep, "Backdrop");
             _music = BackgroundMusicPlayer.CreateAndPlay(transform);
 
-            var json = Resources.Load<TextAsset>("hallucination_cards");
+            if (!LoadTopic(_topicIndex)) return;
+
+            StartCoroutine(RunSession());
+        }
+
+        private bool LoadTopic(int index)
+        {
+            var resourceName = TopicResourceNames[index];
+            var json = Resources.Load<TextAsset>(resourceName);
             _burst = CardBurstData.LoadFromStreamingJson(json);
 
             if (_burst == null || _burst.cards == null || _burst.cards.Count == 0)
             {
-                Debug.LogError("GameLoopController: card burst data failed to load. Check Assets/Resources/hallucination_cards.json");
-                return;
+                Debug.LogError($"GameLoopController: card burst data failed to load. Check Assets/Resources/{resourceName}.json");
+                return false;
             }
 
-            StartCoroutine(RunSession());
+            return true;
         }
 
         private IEnumerator RunSession()
@@ -189,10 +208,13 @@ namespace LearnAIGame.Gameplay
             UIFactory.CreateLabel(panel, "Skill-tree tile lit up (stub)", 26, new Vector2(0, 100), new Vector2(700, 50), TextAnchor.MiddleCenter, FontStyle.Normal, Color.white);
 
             var tapped = false;
-            UIFactory.CreateButton(panel, "Play Again ↻", new Vector2(0, -260), new Vector2(300, 90), () => tapped = true, Color.white, GamePalette.Darken(GamePalette.CorrectGreen, 0.75f));
+            UIFactory.CreateButton(panel, "Next Topic →", new Vector2(0, -260), new Vector2(300, 90), () => tapped = true, Color.white, GamePalette.Darken(GamePalette.CorrectGreen, 0.75f));
 
             yield return new WaitUntil(() => tapped);
             Destroy(panel.gameObject);
+
+            _topicIndex = (_topicIndex + 1) % TopicResourceNames.Length;
+            if (!LoadTopic(_topicIndex)) yield break;
 
             StartCoroutine(RunSession());
         }

@@ -1,0 +1,80 @@
+{
+  "topicId": "bias_training_data",
+  "topicTitle": "When the Data Has Favorites",
+  "cardType": "real_or_hallucination",
+  "cards": [
+    {
+      "id": "btd01",
+      "prompt": "Two warehouse-supervisor candidates are equally qualified; one took a year away to care for family. Which AI recommendation should you trust?",
+      "optionA": "Prefer the candidate with no career break; historical retention data marks them as lower risk.",
+      "optionB": "Compare both candidates on the posted job criteria; a career break is not a job-related risk signal.",
+      "correctOption": "B",
+      "explanation": "The historical pattern may reflect who employers used to favor, not who will do the job well. A spreadsheet can preserve an old preference with much better formatting."
+    },
+    {
+      "id": "btd02",
+      "prompt": "A lending assistant wants to lower Sam's credit limit because their postcode is linked to past defaults. Which answer should you trust?",
+      "optionA": "Use the postcode; it is a neutral geographic signal with strong predictive value.",
+      "optionB": "Do not treat postcode as a proxy for risk here; use relevant financial factors and test the decision for uneven impact.",
+      "correctOption": "B",
+      "explanation": "A proxy can look objective while smuggling in neighborhood and demographic history. Predictive is not automatically fair, relevant, or acceptable for the decision."
+    },
+    {
+      "id": "btd03",
+      "prompt": "An AI summarizes English-language reviews and concludes, 'Customers worldwide find onboarding intuitive.' Which answer should you trust?",
+      "optionA": "The conclusion is sound because the sample is large and the same product is used everywhere.",
+      "optionB": "The sample cannot support a worldwide claim; it leaves out customers whose language and market may change the experience.",
+      "correctOption": "B",
+      "explanation": "More of the same sample is still the same sample. The model sounds global because the sentence is global, not because the evidence is."
+    },
+    {
+      "id": "btd04",
+      "prompt": "A performance tool ranks remote staff lower because past promotion data favored people seen in the office. Which response should you trust?",
+      "optionA": "Use the ranking; promotions are the company’s best record of who showed commitment.",
+      "optionB": "Do not reuse promotion history as a commitment score; evaluate defined outcomes and inspect the historical bias first.",
+      "correctOption": "B",
+      "explanation": "Past promotions may capture visibility, manager preference, or who could commute — not commitment. Training on the outcome can turn yesterday’s rule into tomorrow’s policy."
+    },
+    {
+      "id": "btd05",
+      "prompt": "A medical-image model was trained mostly on scans from one hospital and calls another hospital’s images 'abnormal.' Which answer should you trust?",
+      "optionA": "Trust the flag; the model has seen thousands of scans and its confidence is high.",
+      "optionB": "Treat the flag cautiously; a change in equipment or patient mix can make familiar-looking confidence unreliable.",
+      "correctOption": "B",
+      "explanation": "The model may be reacting to a different scanner, workflow, or population rather than a condition. Confidence tells you how strongly it recognized its training world, not whether this is that world."
+    },
+    {
+      "id": "btd06",
+      "prompt": "A fraud tool blocks claims from a rural county after old data showed more fraud there. Which recommendation should you trust?",
+      "optionA": "Block them automatically; the county-level pattern is enough to protect the review team.",
+      "optionB": "Review the claim with case-specific evidence; geography may reflect reporting and access patterns, not fraud by this claimant.",
+      "correctOption": "B",
+      "explanation": "A group-level pattern is not proof about an individual claim. Automating that leap is how a rough shortcut becomes a very efficient unfair decision."
+    },
+    {
+      "id": "btd07",
+      "prompt": "An image tool keeps showing men for 'software architect' because that dominates its training examples. Which output should you trust?",
+      "optionA": "Use the results as-is; the tool is simply reflecting the most common real-world examples.",
+      "optionB": "Treat the results as skewed examples, not a neutral picture of who fits the role; widen the representation deliberately.",
+      "correctOption": "B",
+      "explanation": "Common in training data is not the same as representative or desirable in a hiring image. The tool is reflecting a pattern, not issuing a census."
+    },
+    {
+      "id": "btd08",
+      "prompt": "A support bot gives lower satisfaction scores to customers who write in non-standard English. Which conclusion should you trust?",
+      "optionA": "Those customers are less satisfied; the classifier has learned a reliable language signal.",
+      "optionB": "Audit the labels and language coverage; the classifier may be mistaking unfamiliar phrasing for dissatisfaction.",
+      "correctOption": "B",
+      "explanation": "If the training labels mostly taught the model one writing style, another style can look negative by accident. The model has an opinion about grammar, not necessarily about the service."
+    }
+  ],
+  "checkpointCard": {
+    "id": "btd_checkpoint",
+    "prompt": "A resume screener favors graduates of a few universities because past hires from them were promoted more often. Which answer should you trust?",
+    "optionA": "Keep the school signal; promotion history proves those graduates are better performers.",
+    "optionB": "Check whether access, recruiting patterns, and manager bias shaped promotions before treating school as a quality signal.",
+    "correctOption": "B",
+    "explanation": "The model inherited a correlation, not a verdict about talent. Before a historical outcome becomes a filter, ask what else created it."
+  },
+  "feynmanScript": "In hiring, lending, and English-only review cards, the model sounded practical because it had a pattern to point at. But a pattern in old data can be an old preference wearing a spreadsheet. 'Historically common' isn't the same as fair, relevant, or safe to automate."
+}
