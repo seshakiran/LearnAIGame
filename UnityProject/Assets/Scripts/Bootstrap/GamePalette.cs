@@ -33,22 +33,7 @@ namespace LearnAIGame.Bootstrap
 
         public static readonly Color ShadowDark = new Color(0f, 0f, 0f, 0.45f);
 
-        // Each card gets one of these as its own subtle background — picked by a
-        // stable hash of the card id so it has quiet texture, not a rainbow carnival.
-        public static readonly Color[] CardThemes =
-        {
-            FromHex("#0d151d"),
-            FromHex("#101a22"),
-            FromHex("#0b131b"),
-            FromHex("#122029"),
-        };
-
-        public static Color CardThemeFor(string cardId)
-        {
-            var hash = string.IsNullOrEmpty(cardId) ? 0 : cardId.GetHashCode();
-            var index = Mathf.Abs(hash) % CardThemes.Length;
-            return CardThemes[index];
-        }
+        public static Color WithAlpha(Color c, float alpha) => new Color(c.r, c.g, c.b, alpha);
 
         public static Color FromHex(string hex)
         {
