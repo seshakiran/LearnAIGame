@@ -61,7 +61,10 @@ namespace LearnAIGame.Bootstrap
         {
             if (RoundedSpriteCache.TryGetValue(radius, out var cached)) return cached;
 
-            var size = radius * 4;
+            // radius=0 is a valid request (a flat, unrounded wash/overlay) but radius*4
+            // would be a degenerate 0x0 texture, so floor the texture size while keeping
+            // the corner math (and 9-slice border) at the requested radius.
+            var size = Mathf.Max(radius * 4, 4);
             var tex = new Texture2D(size, size, TextureFormat.RGBA32, false) { filterMode = FilterMode.Bilinear };
             var pixels = new Color32[size * size];
 
