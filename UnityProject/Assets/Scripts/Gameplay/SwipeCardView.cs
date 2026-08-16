@@ -20,7 +20,10 @@ namespace LearnAIGame.Gameplay
 
         private const float SwipeThreshold = 160f;
         private const float MaxRotationDegrees = 12f;
-        private static readonly Vector2 CardSize = new Vector2(620, 600);
+
+        // Taller than the original trivia-card sizing — the AI-scenario prompts run
+        // much longer than "When was the Eiffel Tower completed?" and need the room.
+        private static readonly Vector2 CardSize = new Vector2(640, 760);
 
         public static SwipeCardView Create(Transform parent, JudgmentCard card)
         {
@@ -53,10 +56,10 @@ namespace LearnAIGame.Gameplay
             var view = root.AddComponent<SwipeCardView>();
             view._rect = rootRect;
 
-            AddLabel(faceGo.transform, "Prompt", card.prompt, 30, new Vector2(0, 160), FontStyle.Bold, TextAnchor.MiddleCenter, new Vector2(560, 170), Color.white);
+            AddLabel(faceGo.transform, "Prompt", card.prompt, 30, new Vector2(0, 200), FontStyle.Bold, TextAnchor.MiddleCenter, new Vector2(580, 260), GamePalette.TextLight, autoShrink: true, minFontSize: 20);
 
-            BuildChoiceChip(faceGo.transform, "A", card.optionA, new Vector2(-150, -190), GamePalette.ChoiceA);
-            BuildChoiceChip(faceGo.transform, "B", card.optionB, new Vector2(150, -190), GamePalette.ChoiceB);
+            BuildChoiceChip(faceGo.transform, "A", card.optionA, new Vector2(-150, -260), GamePalette.ChoiceA);
+            BuildChoiceChip(faceGo.transform, "B", card.optionB, new Vector2(150, -260), GamePalette.ChoiceB);
 
             var canvasGroup = root.AddComponent<CanvasGroup>();
             canvasGroup.blocksRaycasts = true;
@@ -68,17 +71,21 @@ namespace LearnAIGame.Gameplay
         // stays within the chip's own width so it can never spill past the card/canvas edge.
         private static void BuildChoiceChip(Transform parent, string letter, string text, Vector2 anchoredPos, Color badgeColor)
         {
-            var chipSize = new Vector2(210, 110);
-            var chip = UIFactory.CreateSurface(parent, GamePalette.CardSurface, anchoredPos, chipSize, 20, $"Chip{letter}");
-            AddLabel(chip.transform, "ChipText", text, 18, new Vector2(0, -14), FontStyle.Bold, TextAnchor.MiddleCenter, new Vector2(180, 66), GamePalette.TextDark);
+            var chipSize = new Vector2(240, 190);
+            var chip = UIFactory.CreateSurface(parent, GamePalette.ChipSurface, anchoredPos, chipSize, 20, $"Chip{letter}");
+
+            // Text box is shifted down and shrunk from the full chip size so it never
+            // grows up into the badge — long answers auto-shrink to fit instead of overflowing.
+            AddLabel(chip.transform, "ChipText", text, 20, new Vector2(0, -18), FontStyle.Bold, TextAnchor.MiddleCenter, new Vector2(210, 130), GamePalette.TextLight, autoShrink: true, minFontSize: 13);
 
             const float badgeSize = 52f;
             var badgeY = anchoredPos.y + chipSize.y / 2f;
             var badge = UIFactory.CreateSurface(parent, badgeColor, new Vector2(anchoredPos.x, badgeY), new Vector2(badgeSize, badgeSize), (int)(badgeSize / 2f), $"Badge{letter}");
-            AddLabel(badge.transform, "BadgeLabel", letter, 22, Vector2.zero, FontStyle.Bold, TextAnchor.MiddleCenter, new Vector2(badgeSize - 4, badgeSize - 4), Color.white);
+            AddLabel(badge.transform, "BadgeLabel", letter, 22, Vector2.zero, FontStyle.Bold, TextAnchor.MiddleCenter, new Vector2(badgeSize - 4, badgeSize - 4), GamePalette.TextDark);
         }
 
-        private static void AddLabel(Transform parent, string name, string text, int fontSize, Vector2 anchoredPos, FontStyle style, TextAnchor anchor, Vector2 size, Color color)
+        private static void AddLabel(Transform parent, string name, string text, int fontSize, Vector2 anchoredPos, FontStyle style, TextAnchor anchor, Vector2 size, Color color,
+            bool autoShrink = false, int minFontSize = 14)
         {
             var go = new GameObject(name, typeof(RectTransform));
             go.transform.SetParent(parent, false);
@@ -95,7 +102,18 @@ namespace LearnAIGame.Gameplay
             label.alignment = anchor;
             label.color = color;
             label.horizontalOverflow = HorizontalWrapMode.Wrap;
-            label.verticalOverflow = VerticalWrapMode.Overflow;
+
+            if (autoShrink)
+            {
+                label.verticalOverflow = VerticalWrapMode.Truncate;
+                label.resizeTextForBestFit = true;
+                label.resizeTextMinSize = minFontSize;
+                label.resizeTextMaxSize = fontSize;
+            }
+            else
+            {
+                label.verticalOverflow = VerticalWrapMode.Overflow;
+            }
         }
 
         public void OnBeginDrag(PointerEventData eventData)

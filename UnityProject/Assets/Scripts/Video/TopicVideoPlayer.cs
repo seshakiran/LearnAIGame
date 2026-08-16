@@ -29,10 +29,23 @@ namespace LearnAIGame.Video
             var videoGo = new GameObject("VideoSurface", typeof(RectTransform), typeof(RawImage));
             videoGo.transform.SetParent(panel, false);
             var videoRect = videoGo.GetComponent<RectTransform>();
-            videoRect.anchorMin = Vector2.zero;
-            videoRect.anchorMax = Vector2.one;
-            videoRect.offsetMin = new Vector2(0, 140);
-            videoRect.offsetMax = new Vector2(0, -140);
+
+            // Fit the clip's native aspect ratio inside the available area instead of
+            // stretching it — a RawImage doesn't preserve source aspect ratio on its own.
+            var availableWidth = (float)Screen.width;
+            var availableHeight = Mathf.Max(Screen.height - 280f, 16f);
+            var clipAspect = (float)clip.width / clip.height;
+            var fitWidth = availableWidth;
+            var fitHeight = fitWidth / clipAspect;
+            if (fitHeight > availableHeight)
+            {
+                fitHeight = availableHeight;
+                fitWidth = fitHeight * clipAspect;
+            }
+
+            videoRect.anchorMin = videoRect.anchorMax = new Vector2(0.5f, 0.5f);
+            videoRect.anchoredPosition = Vector2.zero;
+            videoRect.sizeDelta = new Vector2(fitWidth, fitHeight);
 
             var renderTexture = new RenderTexture(Mathf.Max((int)clip.width, 16), Mathf.Max((int)clip.height, 16), 0);
             videoGo.GetComponent<RawImage>().texture = renderTexture;
@@ -71,6 +84,7 @@ namespace LearnAIGame.Video
             videoPlayer.Stop();
             Object.Destroy(panel.gameObject);
             Object.Destroy(renderTexture);
+            yield return null;
         }
     }
 }

@@ -32,6 +32,8 @@ namespace LearnAIGame.Gameplay
 
         private void Start()
         {
+            EnsureMainCamera();
+
             _canvas = UIFactory.CreateRootCanvas();
             UIFactory.CreateFullScreenPanel(_canvas.transform, GamePalette.BackgroundDeep, "Backdrop");
             _music = BackgroundMusicPlayer.CreateAndPlay(transform);
@@ -39,6 +41,23 @@ namespace LearnAIGame.Gameplay
             if (!LoadTopic(_topicIndex)) return;
 
             StartCoroutine(RunSession());
+        }
+
+        /// The scene is built entirely at runtime with no authored Camera. Without one,
+        /// the Editor Game View has nothing to render and shows a "No cameras rendering"
+        /// watermark that can bleed through translucent UI, and VideoPlayer's Direct audio
+        /// output is unreliable with zero AudioListeners present in the scene.
+        private static void EnsureMainCamera()
+        {
+            if (Camera.main != null) return;
+
+            var cameraGo = new GameObject("MainCamera", typeof(Camera), typeof(AudioListener));
+            cameraGo.tag = "MainCamera";
+            var camera = cameraGo.GetComponent<Camera>();
+            camera.clearFlags = CameraClearFlags.SolidColor;
+            camera.backgroundColor = GamePalette.BackgroundDeep;
+            camera.cullingMask = 0;
+            camera.orthographic = true;
         }
 
         private bool LoadTopic(int index)
@@ -88,53 +107,56 @@ namespace LearnAIGame.Gameplay
             if (!isCheckpoint && correct) _score++;
 
             Destroy(cardView.gameObject);
+            yield return null;
 
             yield return ShowRevealPanel(card, correct, isCheckpoint);
         }
 
         private IEnumerator ShowRevealPanel(JudgmentCard card, bool correct, bool isCheckpoint)
         {
-            var flashColor = correct ? GamePalette.CorrectGreen : GamePalette.IncorrectRed;
-            var panel = UIFactory.CreateFullScreenPanel(_canvas.transform, flashColor, "RevealPanel");
+            var accent = correct ? GamePalette.CorrectAccent : GamePalette.IncorrectAccent;
+            var panel = UIFactory.CreateFullScreenPanel(_canvas.transform, GamePalette.ScreenSurface, "RevealPanel");
 
-            var icon = UIFactory.CreateSurface(panel, Color.white, new Vector2(0, 310), new Vector2(110, 110), 55, "ResultIcon");
-            UIFactory.CreateLabel(icon.transform, correct ? "✓" : "✕", 60, Vector2.zero, new Vector2(100, 100), TextAnchor.MiddleCenter, FontStyle.Bold, flashColor);
+            var icon = UIFactory.CreateSurface(panel, accent, new Vector2(0, 310), new Vector2(110, 110), 55, "ResultIcon");
+            UIFactory.CreateLabel(icon.transform, correct ? "✓" : "✕", 60, Vector2.zero, new Vector2(100, 100), TextAnchor.MiddleCenter, FontStyle.Bold, GamePalette.TextDark);
 
             var headline = correct ? "Correct!" : "Not quite";
-            UIFactory.CreateLabel(panel, headline, 44, new Vector2(0, 200), new Vector2(700, 80), TextAnchor.MiddleCenter, FontStyle.Bold, Color.white);
+            UIFactory.CreateLabel(panel, headline, 44, new Vector2(0, 200), new Vector2(700, 80), TextAnchor.MiddleCenter, FontStyle.Bold, GamePalette.TextLight);
 
             var explanationCard = UIFactory.CreateSurface(panel, GamePalette.CardSurface, new Vector2(0, 20), new Vector2(820, 260), 28, "ExplanationCard");
-            UIFactory.CreateLabel(explanationCard.transform, card.explanation, 25, Vector2.zero, new Vector2(740, 220), TextAnchor.MiddleCenter, FontStyle.Normal, GamePalette.TextDark);
+            UIFactory.CreateLabel(explanationCard.transform, card.explanation, 25, Vector2.zero, new Vector2(740, 220), TextAnchor.MiddleCenter, FontStyle.Normal, GamePalette.TextLight, autoShrink: true, minFontSize: 18);
 
             var tapped = false;
-            UIFactory.CreateButton(panel, isCheckpoint ? "Continue →" : "Next →", new Vector2(0, -240), new Vector2(300, 90), () => tapped = true, Color.white, GamePalette.Darken(flashColor, 0.85f));
+            UIFactory.CreateButton(panel, isCheckpoint ? "Continue →" : "Next →", new Vector2(0, -240), new Vector2(300, 90), () => tapped = true, accent, GamePalette.TextDark);
 
             yield return new WaitUntil(() => tapped);
             Destroy(panel.gameObject);
+            yield return null;
         }
 
         private IEnumerator ShowExplanationScreen()
         {
-            var panel = UIFactory.CreateFullScreenPanel(_canvas.transform, GamePalette.KahootBlue, "ExplanationPanel");
+            var panel = UIFactory.CreateFullScreenPanel(_canvas.transform, GamePalette.ScreenSurface, "ExplanationPanel");
 
-            UIFactory.CreateLabel(panel, _burst.topicTitle, 36, new Vector2(0, 260), new Vector2(760, 60), TextAnchor.MiddleCenter, FontStyle.Bold, Color.white);
+            UIFactory.CreateLabel(panel, _burst.topicTitle, 36, new Vector2(0, 260), new Vector2(760, 60), TextAnchor.MiddleCenter, FontStyle.Bold, GamePalette.TextLight);
 
             var scriptCard = UIFactory.CreateSurface(panel, GamePalette.CardSurface, new Vector2(0, 20), new Vector2(800, 380), 28, "ScriptCard");
-            UIFactory.CreateLabel(scriptCard.transform, _burst.feynmanScript, 26, Vector2.zero, new Vector2(720, 340), TextAnchor.MiddleCenter, FontStyle.Normal, GamePalette.TextDark);
+            UIFactory.CreateLabel(scriptCard.transform, _burst.feynmanScript, 26, Vector2.zero, new Vector2(720, 340), TextAnchor.MiddleCenter, FontStyle.Normal, GamePalette.TextLight, autoShrink: true, minFontSize: 18);
 
             var tapped = false;
-            UIFactory.CreateButton(panel, "Continue →", new Vector2(0, -320), new Vector2(300, 90), () => tapped = true, Color.white, GamePalette.KahootBlue);
+            UIFactory.CreateButton(panel, "Continue →", new Vector2(0, -320), new Vector2(300, 90), () => tapped = true, GamePalette.Lime, GamePalette.TextDark);
 
             yield return new WaitUntil(() => tapped);
             Destroy(panel.gameObject);
+            yield return null;
         }
 
         private IEnumerator ShowLeaderboardScreen()
         {
             var streak = StreakTracker.RegisterSessionCompleted();
-            var panel = UIFactory.CreateFullScreenPanel(_canvas.transform, GamePalette.KahootPurple, "LeaderboardPanel");
+            var panel = UIFactory.CreateFullScreenPanel(_canvas.transform, GamePalette.ScreenSurface, "LeaderboardPanel");
 
-            UIFactory.CreateLabel(panel, "Leaderboard", 42, new Vector2(0, 350), new Vector2(600, 70), TextAnchor.MiddleCenter, FontStyle.Bold, Color.white);
+            UIFactory.CreateLabel(panel, "Leaderboard", 42, new Vector2(0, 350), new Vector2(600, 70), TextAnchor.MiddleCenter, FontStyle.Bold, GamePalette.TextLight);
             UIFactory.CreateLabel(panel, "(stub — no backend yet, mock ranks)", 16, new Vector2(0, 305), new Vector2(700, 30), TextAnchor.MiddleCenter, FontStyle.Italic, new Color(1f, 1f, 1f, 0.6f));
 
             var board = UIFactory.CreateSurface(panel, GamePalette.CardSurface, new Vector2(0, 60), new Vector2(720, 440), 28, "LeaderboardCard");
@@ -150,7 +172,7 @@ namespace LearnAIGame.Gameplay
 
                 if (entry.isPlayer)
                 {
-                    UIFactory.CreateSurface(board.transform, GamePalette.KahootYellow, new Vector2(0, y), new Vector2(660, 52), 16, "YouRow");
+                    UIFactory.CreateSurface(board.transform, GamePalette.Lime, new Vector2(0, y), new Vector2(660, 52), 16, "YouRow");
                 }
 
                 var rowTextColor = entry.isPlayer ? GamePalette.TextDark : GamePalette.TextMuted;
@@ -160,13 +182,14 @@ namespace LearnAIGame.Gameplay
                 UIFactory.CreateLabel(board.transform, $"{entry.score}/{_totalCards}", 22, new Vector2(230, y), new Vector2(140, 46), TextAnchor.MiddleRight, rowStyle, rowTextColor);
             }
 
-            UIFactory.CreateLabel(panel, $"Streak: {streak} day{(streak == 1 ? "" : "s")}", 22, new Vector2(0, -280), new Vector2(500, 40), TextAnchor.MiddleCenter, FontStyle.Normal, GamePalette.KahootYellow);
+            UIFactory.CreateLabel(panel, $"Streak: {streak} day{(streak == 1 ? "" : "s")}", 22, new Vector2(0, -280), new Vector2(500, 40), TextAnchor.MiddleCenter, FontStyle.Normal, GamePalette.Lime);
 
             var tapped = false;
-            UIFactory.CreateButton(panel, "Continue →", new Vector2(0, -360), new Vector2(300, 90), () => tapped = true, Color.white, GamePalette.KahootPurple);
+            UIFactory.CreateButton(panel, "Continue →", new Vector2(0, -360), new Vector2(300, 90), () => tapped = true, GamePalette.Lime, GamePalette.TextDark);
 
             yield return new WaitUntil(() => tapped);
             Destroy(panel.gameObject);
+            yield return null;
         }
 
         private readonly struct LeaderboardEntry
@@ -202,16 +225,17 @@ namespace LearnAIGame.Gameplay
 
         private IEnumerator ShowPayoffStub()
         {
-            var panel = UIFactory.CreateFullScreenPanel(_canvas.transform, GamePalette.CorrectGreen, "PayoffPanel");
+            var panel = UIFactory.CreateFullScreenPanel(_canvas.transform, GamePalette.ScreenSurface, "PayoffPanel");
 
-            UIFactory.CreateLabel(panel, "Topic complete!", 44, new Vector2(0, 200), new Vector2(700, 70), TextAnchor.MiddleCenter, FontStyle.Bold, Color.white);
-            UIFactory.CreateLabel(panel, "Skill-tree tile lit up (stub)", 26, new Vector2(0, 100), new Vector2(700, 50), TextAnchor.MiddleCenter, FontStyle.Normal, Color.white);
+            UIFactory.CreateLabel(panel, "Topic complete!", 44, new Vector2(0, 200), new Vector2(700, 70), TextAnchor.MiddleCenter, FontStyle.Bold, GamePalette.Lime);
+            UIFactory.CreateLabel(panel, "Skill-tree tile lit up (stub)", 26, new Vector2(0, 100), new Vector2(700, 50), TextAnchor.MiddleCenter, FontStyle.Normal, GamePalette.TextMuted);
 
             var tapped = false;
-            UIFactory.CreateButton(panel, "Next Topic →", new Vector2(0, -260), new Vector2(300, 90), () => tapped = true, Color.white, GamePalette.Darken(GamePalette.CorrectGreen, 0.75f));
+            UIFactory.CreateButton(panel, "Next Topic →", new Vector2(0, -260), new Vector2(300, 90), () => tapped = true, GamePalette.Lime, GamePalette.TextDark);
 
             yield return new WaitUntil(() => tapped);
             Destroy(panel.gameObject);
+            yield return null;
 
             _topicIndex = (_topicIndex + 1) % TopicResourceNames.Length;
             if (!LoadTopic(_topicIndex)) yield break;

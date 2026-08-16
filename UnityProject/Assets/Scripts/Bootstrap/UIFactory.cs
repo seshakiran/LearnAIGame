@@ -118,7 +118,8 @@ namespace LearnAIGame.Bootstrap
         }
 
         public static Text CreateLabel(Transform parent, string text, int fontSize, Vector2 anchoredPos, Vector2 size,
-            TextAnchor anchor = TextAnchor.MiddleCenter, FontStyle style = FontStyle.Normal, Color? color = null)
+            TextAnchor anchor = TextAnchor.MiddleCenter, FontStyle style = FontStyle.Normal, Color? color = null,
+            bool autoShrink = false, int minFontSize = 14)
         {
             var go = new GameObject("Label", typeof(RectTransform));
             go.transform.SetParent(parent, false);
@@ -135,7 +136,21 @@ namespace LearnAIGame.Bootstrap
             label.alignment = anchor;
             label.color = color ?? Color.white;
             label.horizontalOverflow = HorizontalWrapMode.Wrap;
-            label.verticalOverflow = VerticalWrapMode.Overflow;
+
+            // Long, AI-scenario-length text needs to shrink to fit its box rather than
+            // overflow into neighboring UI (badges, buttons) — see UI Feedback screenshot.
+            if (autoShrink)
+            {
+                label.verticalOverflow = VerticalWrapMode.Truncate;
+                label.resizeTextForBestFit = true;
+                label.resizeTextMinSize = minFontSize;
+                label.resizeTextMaxSize = fontSize;
+            }
+            else
+            {
+                label.verticalOverflow = VerticalWrapMode.Overflow;
+            }
+
             return label;
         }
 
@@ -144,7 +159,7 @@ namespace LearnAIGame.Bootstrap
         public static Button CreateButton(Transform parent, string label, Vector2 anchoredPos, Vector2 size,
             System.Action onClick, Color? baseColor = null, Color? textColor = null)
         {
-            var color = baseColor ?? GamePalette.KahootPurple;
+            var color = baseColor ?? GamePalette.Lime;
             var shadowColor = GamePalette.Darken(color, 0.6f);
             const float bevel = 10f;
 

@@ -2,42 +2,45 @@ using UnityEngine;
 
 namespace LearnAIGame.Bootstrap
 {
-    /// Bold, flat, high-saturation palette — Kahoot's game-show energy for
-    /// backgrounds/buttons, Tinder's card-swipe language for choice color-coding.
+    /// Deep, editorial palette shared with the marketing site (marketing/index.html) —
+    /// muted lime/blue/rose accents on navy, instead of a saturated game-show rainbow.
     public static class GamePalette
     {
-        public static readonly Color KahootPurple = FromHex("#46178F");
-        public static readonly Color KahootBlue = FromHex("#1368CE");
-        public static readonly Color KahootYellow = FromHex("#FFA602");
+        // Backgrounds — layered navy, darkest at the root.
+        public static readonly Color BackgroundDeep = FromHex("#0a1119");
+        public static readonly Color ScreenSurface = FromHex("#101d29");
+        public static readonly Color CardSurface = FromHex("#16232f");
+        public static readonly Color ChipSurface = FromHex("#1f303e");
 
-        public static readonly Color BackgroundDeep = FromHex("#1B1035");
+        // Text — light ink on dark surfaces, dark navy on bright accent surfaces.
+        public static readonly Color TextLight = FromHex("#f1ede4");
+        public static readonly Color TextMuted = FromHex("#bbb6ac");
+        public static readonly Color TextDark = FromHex("#0a1119");
 
-        public static readonly Color CardSurface = FromHex("#FFFFFF");
-        public static readonly Color TextDark = FromHex("#1A1A2E");
-        public static readonly Color TextMuted = FromHex("#6B6B80");
+        public static readonly Color Lime = FromHex("#cce761");
+        public static readonly Color LimeDeep = FromHex("#99b527");
+        public static readonly Color Blue = FromHex("#6ea8ff");
+        public static readonly Color Rose = FromHex("#e5a0b2");
+        public static readonly Color Amber = FromHex("#d9b26a");
 
-        // Left/right swipe choice colors — Tinder-style, deliberately not
-        // green/red so dragging never leaks the correct answer.
-        public static readonly Color ChoiceA = FromHex("#FF6B6B");
-        public static readonly Color ChoiceB = FromHex("#4ECDC4");
+        // Left/right swipe choice colors — deliberately not the correct/incorrect
+        // accent hues, so dragging never leaks the correct answer.
+        public static readonly Color ChoiceA = Blue;
+        public static readonly Color ChoiceB = Amber;
 
-        public static readonly Color CorrectGreen = FromHex("#2ECC71");
-        public static readonly Color IncorrectRed = FromHex("#FF4757");
+        public static readonly Color CorrectAccent = Lime;
+        public static readonly Color IncorrectAccent = Rose;
 
-        public static readonly Color ShadowDark = new Color(0f, 0f, 0f, 0.35f);
+        public static readonly Color ShadowDark = new Color(0f, 0f, 0f, 0.45f);
 
-        // Each card gets one of these as its own bold background — picked by a
-        // stable hash of the card id so it's colorful but not literally random every replay.
+        // Each card gets one of these as its own subtle background — picked by a
+        // stable hash of the card id so it has quiet texture, not a rainbow carnival.
         public static readonly Color[] CardThemes =
         {
-            FromHex("#46178F"), // purple
-            FromHex("#E21B3C"), // red
-            FromHex("#1368CE"), // blue
-            FromHex("#D6249F"), // magenta
-            FromHex("#1DB954"), // green
-            FromHex("#FF8C42"), // orange
-            FromHex("#0E7C7B"), // teal
-            FromHex("#C2185B"), // pink
+            FromHex("#0d151d"),
+            FromHex("#101a22"),
+            FromHex("#0b131b"),
+            FromHex("#122029"),
         };
 
         public static Color CardThemeFor(string cardId)
