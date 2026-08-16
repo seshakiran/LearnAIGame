@@ -23,12 +23,24 @@ namespace LearnAIGame.Gameplay
             "prompt_injection_cards",
         };
 
+        // Display names for the path map (§7/§3 "skill-tree / map") — kept in the
+        // same order as TopicResourceNames rather than parsed from all 4 JSON files
+        // up front, since the map only needs to render, not load, the other topics.
+        private static readonly string[] TopicTitles =
+        {
+            "Why AI Lies With Confidence",
+            "When the Data Has Favorites",
+            "When the Search Result Is Wrong",
+            "When the Document Talks Back",
+        };
+
         private Canvas _canvas;
         private CardBurstData _burst;
         private BackgroundMusicPlayer _music;
         private int _score;
         private int _totalCards;
         private int _topicIndex;
+        private int _topicsCompletedThisSession;
 
         private void Start()
         {
@@ -40,7 +52,13 @@ namespace LearnAIGame.Gameplay
 
             if (!LoadTopic(_topicIndex)) return;
 
-            StartCoroutine(RunSession());
+            StartCoroutine(Bootstrap());
+        }
+
+        private IEnumerator Bootstrap()
+        {
+            yield return TopicPathScreen.Show(_canvas.transform, TopicTitles, _topicsCompletedThisSession, _topicIndex);
+            yield return RunSession();
         }
 
         /// The scene is built entirely at runtime with no authored Camera. Without one,
@@ -80,10 +98,14 @@ namespace LearnAIGame.Gameplay
             _score = 0;
             _totalCards = _burst.cards.Count;
 
-            foreach (var card in _burst.cards)
+            var header = BurstHeader.Create(_canvas.transform, _burst.topicTitle);
+            for (var i = 0; i < _burst.cards.Count; i++)
             {
-                yield return PlayCard(card, isCheckpoint: false);
+                header.SetProgress(i + 1, _burst.cards.Count);
+                yield return PlayCard(_burst.cards[i], isCheckpoint: false);
             }
+            header.Destroy();
+            yield return null;
 
             _music.Pause();
             yield return TopicVideoPlayer.Play(_canvas.transform);
@@ -237,7 +259,11 @@ namespace LearnAIGame.Gameplay
             Destroy(panel.gameObject);
             yield return null;
 
+            _topicsCompletedThisSession++;
             _topicIndex = (_topicIndex + 1) % TopicResourceNames.Length;
+
+            yield return TopicPathScreen.Show(_canvas.transform, TopicTitles, _topicsCompletedThisSession, _topicIndex);
+
             if (!LoadTopic(_topicIndex)) yield break;
 
             StartCoroutine(RunSession());
