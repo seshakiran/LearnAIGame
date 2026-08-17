@@ -15,15 +15,25 @@ namespace LearnAIGame.Gameplay
         private readonly GameObject _root;
         private readonly Text _counterLabel;
         private readonly RectTransform _fillRect;
+        private readonly Text _meterLabel;
+        private readonly string _meterName;
+        private int _meterValue;
 
-        private BurstHeader(GameObject root, Text counterLabel, RectTransform fillRect)
+        private BurstHeader(GameObject root, Text counterLabel, RectTransform fillRect, Text meterLabel, string meterName, int meterStart)
         {
             _root = root;
             _counterLabel = counterLabel;
             _fillRect = fillRect;
+            _meterLabel = meterLabel;
+            _meterName = meterName;
+            _meterValue = meterStart;
+            RenderMeter();
         }
 
-        public static BurstHeader Create(Transform canvasParent, string topicTitle)
+        /// meterName/meterStart drive the live incident meter (grounded-incident
+        /// framing pass, PLAN.md §13 — Deep Trace's "Queue Pressure" pattern) —
+        /// pass null/empty meterName to omit it for a burst that has none.
+        public static BurstHeader Create(Transform canvasParent, string topicTitle, string meterName = null, int meterStart = 50)
         {
             // Full-screen, non-interactive container — everything below is positioned
             // in canvas-center-relative coordinates, same as any other full panel.
@@ -48,8 +58,18 @@ namespace LearnAIGame.Gameplay
             UIFactory.CreateLabel(root.transform, topicTitle, 24, new Vector2(0, titleY), new Vector2(TrackWidth - 40, 40),
                 TextAnchor.MiddleCenter, FontStyle.Bold, GamePalette.TextLight, autoShrink: true, minFontSize: 16);
 
-            var counterLabel = UIFactory.CreateLabel(root.transform, "", 16, new Vector2(0, counterY), new Vector2(TrackWidth - 40, 26),
-                TextAnchor.MiddleCenter, FontStyle.Normal, GamePalette.TextMuted);
+            // Counter and meter share one row (rather than each getting their own) since
+            // tight/non-portrait aspects leave very little vertical room between this
+            // header and the card below it — see the halfHeight clamp above.
+            var counterLabel = UIFactory.CreateLabel(root.transform, "", 16, new Vector2(-(TrackWidth - 40) / 4f, counterY), new Vector2((TrackWidth - 40) / 2f, 26),
+                TextAnchor.MiddleLeft, FontStyle.Normal, GamePalette.TextMuted);
+
+            Text meterLabel = null;
+            if (!string.IsNullOrEmpty(meterName))
+            {
+                meterLabel = UIFactory.CreateLabel(root.transform, "", 16, new Vector2((TrackWidth - 40) / 4f, counterY), new Vector2((TrackWidth - 40) / 2f, 26),
+                    TextAnchor.MiddleRight, FontStyle.Bold, GamePalette.TextMuted);
+            }
 
             var track = UIFactory.CreateSurface(root.transform, GamePalette.CardSurface, new Vector2(0, trackY), new Vector2(TrackWidth, 10), 5, "ProgressTrack");
 
@@ -81,7 +101,7 @@ namespace LearnAIGame.Gameplay
                 TextAnchor.MiddleCenter, FontStyle.Italic, GamePalette.TextMuted);
             swipeCaption.raycastTarget = false;
 
-            return new BurstHeader(root, counterLabel, fillRect);
+            return new BurstHeader(root, counterLabel, fillRect, meterLabel, meterName, meterStart);
         }
 
         public void SetProgress(int current, int total)
@@ -89,6 +109,24 @@ namespace LearnAIGame.Gameplay
             _counterLabel.text = $"Card {current} of {total}";
             var t = total > 0 ? (float)current / total : 0f;
             _fillRect.sizeDelta = new Vector2(TrackWidth * t, 0f);
+        }
+
+        /// Applies a swipe-decision result to the live incident meter. Deltas are
+        /// asymmetric on purpose (mirroring Deep Trace's tuning) — a wrong call should
+        /// visibly cost more than a right call earns back, so the meter reads as
+        /// "things you broke," not just a second score counter.
+        public void ApplyMeterDelta(int delta)
+        {
+            if (_meterLabel == null) return;
+            _meterValue = Mathf.Clamp(_meterValue + delta, 0, 100);
+            RenderMeter();
+        }
+
+        private void RenderMeter()
+        {
+            if (_meterLabel == null) return;
+            _meterLabel.text = $"{_meterName}: {_meterValue}";
+            _meterLabel.color = _meterValue >= 70 ? GamePalette.Rose : _meterValue >= 40 ? GamePalette.Amber : GamePalette.Lime;
         }
 
         public void Destroy()

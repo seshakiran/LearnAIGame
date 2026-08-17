@@ -34,9 +34,15 @@ namespace LearnAIGame.Gameplay
             "When the Document Talks Back",
         };
 
+        // Asymmetric on purpose (mirrors Deep Trace's "Queue Pressure" tuning) — a
+        // wrong swipe should visibly cost more than a right swipe earns back.
+        private const int MeterDeltaCorrect = -8;
+        private const int MeterDeltaIncorrect = 15;
+
         private Canvas _canvas;
         private CardBurstData _burst;
         private BackgroundMusicPlayer _music;
+        private BurstHeader _header;
         private int _score;
         private int _totalCards;
         private int _topicIndex;
@@ -98,13 +104,16 @@ namespace LearnAIGame.Gameplay
             _score = 0;
             _totalCards = _burst.cards.Count;
 
-            var header = BurstHeader.Create(_canvas.transform, _burst.topicTitle);
+            yield return CaseBriefingScreen.Show(_canvas.transform, _burst);
+
+            _header = BurstHeader.Create(_canvas.transform, _burst.topicTitle, _burst.meterLabel, _burst.meterStart);
             for (var i = 0; i < _burst.cards.Count; i++)
             {
-                header.SetProgress(i + 1, _burst.cards.Count);
+                _header.SetProgress(i + 1, _burst.cards.Count);
                 yield return PlayCard(_burst.cards[i], isCheckpoint: false);
             }
-            header.Destroy();
+            _header.Destroy();
+            _header = null;
             yield return null;
 
             _music.Pause();
@@ -127,6 +136,7 @@ namespace LearnAIGame.Gameplay
 
             var correct = card.IsCorrectSwipe(chosenSide.Value);
             if (!isCheckpoint && correct) _score++;
+            if (!isCheckpoint) _header?.ApplyMeterDelta(correct ? MeterDeltaCorrect : MeterDeltaIncorrect);
 
             Destroy(cardView.gameObject);
             yield return null;
@@ -160,10 +170,20 @@ namespace LearnAIGame.Gameplay
         {
             var panel = UIFactory.CreateFullScreenPanel(_canvas.transform, GamePalette.ScreenSurface, "ExplanationPanel");
 
-            UIFactory.CreateLabel(panel, _burst.topicTitle, 36, new Vector2(0, 260), new Vector2(760, 60), TextAnchor.MiddleCenter, FontStyle.Bold, GamePalette.TextLight);
+            UIFactory.CreateLabel(panel, $"You learned: {_burst.topicTitle}", 26, new Vector2(0, 300), new Vector2(780, 50), TextAnchor.MiddleCenter, FontStyle.Normal, GamePalette.TextMuted, autoShrink: true, minFontSize: 18);
 
-            var scriptCard = UIFactory.CreateSurface(panel, GamePalette.CardSurface, new Vector2(0, 20), new Vector2(800, 380), 28, "ScriptCard");
-            UIFactory.CreateLabel(scriptCard.transform, _burst.feynmanScript, 26, Vector2.zero, new Vector2(720, 340), TextAnchor.MiddleCenter, FontStyle.Normal, GamePalette.TextLight, autoShrink: true, minFontSize: 18);
+            if (!string.IsNullOrEmpty(_burst.memoryLine))
+            {
+                UIFactory.CreateLabel(panel, $"“{_burst.memoryLine}”", 32, new Vector2(0, 230), new Vector2(780, 100), TextAnchor.MiddleCenter, FontStyle.Bold, GamePalette.Lime, autoShrink: true, minFontSize: 22);
+            }
+
+            var scriptCard = UIFactory.CreateSurface(panel, GamePalette.CardSurface, new Vector2(0, -20), new Vector2(800, 300), 28, "ScriptCard");
+            UIFactory.CreateLabel(scriptCard.transform, _burst.feynmanScript, 25, Vector2.zero, new Vector2(720, 260), TextAnchor.MiddleCenter, FontStyle.Normal, GamePalette.TextLight, autoShrink: true, minFontSize: 17);
+
+            if (!string.IsNullOrEmpty(_burst.reflectionPrompt))
+            {
+                UIFactory.CreateLabel(panel, _burst.reflectionPrompt, 20, new Vector2(0, -220), new Vector2(760, 60), TextAnchor.MiddleCenter, FontStyle.Italic, GamePalette.TextMuted, autoShrink: true, minFontSize: 15);
+            }
 
             var tapped = false;
             UIFactory.CreateButton(panel, "Continue →", new Vector2(0, -320), new Vector2(300, 90), () => tapped = true, GamePalette.Lime, GamePalette.TextDark);

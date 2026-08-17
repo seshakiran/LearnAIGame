@@ -2,79 +2,89 @@
   "topicId": "hallucinations",
   "topicTitle": "Why AI Lies With Confidence",
   "cardType": "real_or_hallucination",
+  "caseCode": "Case 01",
+  "caseTitle": "Confident and Wrong",
+  "skillLine": "Tonight's Skill: Catch confident answers that are wrong",
+  "missionLine": "You're the last reviewer standing between the desk's AI drafts and the client's inbox.",
+  "incidentHeadline": "The queue just spiked — and some of these drafts are wrong.",
+  "stakesLines": ["Answers ship 4x faster", "1 in 6 drafts has a fabricated detail", "No review step catches it before send"],
+  "meterLabel": "Client Trust",
+  "meterStart": 55,
+  "memoryLine": "Confidence is not evidence.",
+  "reflectionPrompt": "What made a draft trustworthy — or not?",
   "cards": [
     {
       "id": "h01",
-      "prompt": "An AI is asked: \"When was the Eiffel Tower completed?\" Swipe the answer you'd trust.",
+      "prompt": "Ticket #118 — a client asked the desk's AI: \"When was the Eiffel Tower completed?\" Here's the draft queued to send. Which version do you approve?",
       "optionA": "1889",
       "optionB": "1887, based on Gustave Eiffel's original blueprint filed in 1885.",
       "correctOption": "A",
-      "explanation": "1889 is correct. The other answer sounds more credible because it's more specific — that's the trap. Models add plausible-sounding detail, not more truth."
+      "explanation": "Approve A — 1889 is correct. B sounds more credible only because it's more specific; the desk's AI adds plausible-sounding detail, not more truth. Sending B would cost Client Trust for nothing."
     },
     {
       "id": "h02",
-      "prompt": "An AI is asked: \"What is the capital of Australia?\" Swipe the answer you'd trust.",
+      "prompt": "Ticket #119 — next in the queue: \"What is the capital of Australia?\" Which draft goes out?",
       "optionA": "Sydney, established as the capital in 1901 following federation.",
       "optionB": "Canberra",
       "correctOption": "B",
-      "explanation": "Canberra is the capital — Sydney is the common wrong guess. The fabricated federation date makes the other answer sound authoritative, but it's still wrong."
+      "explanation": "Approve B — Canberra is the capital; Sydney is the common wrong guess. The fabricated federation date in A makes it sound authoritative, but authoritative-sounding isn't the same as right."
     },
     {
       "id": "h03",
-      "prompt": "An AI is asked: \"How many bones are in the adult human body?\" Swipe the answer you'd trust.",
+      "prompt": "Ticket #120 — a client wants to know: \"How many bones are in the adult human body?\" Pick the draft you'd let through.",
       "optionA": "206",
       "optionB": "204, following fusion of the last two coccyx segments during adolescence.",
       "correctOption": "A",
-      "explanation": "206 is correct. The invented bone-fusion process in the other answer is a classic hallucination move: a fake process that sounds biologically plausible."
+      "explanation": "Approve A — 206 is correct. The invented bone-fusion process in B is a classic move from this AI: a fake process that sounds biologically plausible enough to slip past a fast review."
     },
     {
       "id": "h04",
-      "prompt": "An AI is asked: \"What is the chemical symbol for gold?\" Swipe the answer you'd trust.",
+      "prompt": "Ticket #121 — quick one: \"What is the chemical symbol for gold?\" Which draft ships?",
       "optionA": "Ag, derived from the Latin 'argentum aurified.'",
       "optionB": "Au",
       "correctOption": "B",
-      "explanation": "Au is gold; Ag is actually silver. The other answer invents a fake Latin etymology to sound credible."
+      "explanation": "Approve B — Au is gold; Ag is actually silver. A invents a fake Latin etymology to sound credible. If you'd caught that Ag is silver already, this ticket didn't need the trap to catch you."
     },
     {
       "id": "h05",
-      "prompt": "An AI is asked: \"What is the largest planet in our solar system?\" Swipe the answer you'd trust.",
+      "prompt": "Ticket #122 — the queue's moving fast: \"What is the largest planet in our solar system?\" Approve a draft.",
       "optionA": "Saturn, due to its extensive ring system adding to its measured diameter.",
       "optionB": "Jupiter",
       "correctOption": "B",
-      "explanation": "Jupiter is the largest by a wide margin. The ring-system justification for Saturn sounds scientific but is fabricated reasoning for a wrong answer."
+      "explanation": "Approve B — Jupiter is the largest by a wide margin. The ring-system justification for Saturn in A sounds scientific but is fabricated reasoning stapled onto a wrong answer."
     },
     {
       "id": "h06",
-      "prompt": "An AI is asked: \"In which year did the Berlin Wall fall?\" Swipe the answer you'd trust.",
+      "prompt": "Ticket #123 — a harder one just landed: \"In which year did the Berlin Wall fall?\" Which draft do you trust?",
       "optionA": "1989",
       "optionB": "1991, coinciding with the dissolution of the Soviet Union.",
       "correctOption": "A",
-      "explanation": "1989 is correct. The other answer conflates two real events (the Wall falling and the USSR dissolving) into one wrong date — a very realistic AI mistake pattern."
+      "explanation": "Approve A — 1989 is correct. B conflates two real events (the Wall falling and the USSR dissolving) into one wrong date — this is exactly the mistake pattern that gets past a reviewer who's only skimming for confidence."
     },
     {
       "id": "h07",
-      "prompt": "An AI is asked: \"What is the freezing point of water in Fahrenheit?\" Swipe the answer you'd trust.",
+      "prompt": "Ticket #124 — client's a stickler for precision: \"What is the freezing point of water in Fahrenheit?\" Pick the draft.",
       "optionA": "34°F, adjusted for standard sea-level pressure variations.",
       "optionB": "32°F",
       "correctOption": "B",
-      "explanation": "32°F is correct. The 'pressure adjustment' claim is invented precision — it sounds rigorous but isn't real."
+      "explanation": "Approve B — 32°F is correct. The 'pressure adjustment' claim in A is invented precision — it sounds rigorous, and that's exactly why it's dangerous to wave through."
     },
     {
       "id": "h08",
-      "prompt": "An AI is asked: \"Who was the first person to walk on the Moon?\" Swipe the answer you'd trust.",
+      "prompt": "Ticket #125 — last one before the checkpoint: \"Who was the first person to walk on the Moon?\" Which draft goes to the client?",
       "optionA": "Neil Armstrong",
       "optionB": "Neil Armstrong, accompanied by Michael Collins who also touched the lunar surface moments later.",
       "correctOption": "A",
-      "explanation": "Armstrong is correct, but Michael Collins stayed in lunar orbit and never landed — the other answer adds a confident, false detail on top of a true core fact."
+      "explanation": "Approve A — Armstrong is correct, but Michael Collins stayed in lunar orbit and never landed. B is the hardest kind of draft to catch: a true core fact with one confident, false detail bolted on."
     }
   ],
   "checkpointCard": {
     "id": "h_checkpoint",
-    "prompt": "An AI is asked: \"Who wrote the play 'Romeo and Juliet'?\" Swipe the answer you'd trust.",
+    "prompt": "One more ticket before the shift closes out — \"Who wrote the play 'Romeo and Juliet'?\" Final approval call.",
     "optionA": "William Shakespeare, co-written with Christopher Marlowe per First Folio annotations discovered in 1598.",
     "optionB": "William Shakespeare",
     "correctOption": "B",
-    "explanation": "Shakespeare alone is credited. The other answer invents a co-author and a fake documentary source — same pattern as the burst you just played."
+    "explanation": "Approve B — Shakespeare alone is credited. A invents a co-author and a fake documentary source — same pattern you caught all shift: extra confident detail standing in for evidence."
   },
-  "feynmanScript": "An AI isn't looking up facts — it's predicting the most likely-sounding next words. That's why the extra detail in some of those cards felt so believable. It's not lying on purpose. It's just really good at sounding right."
+  "feynmanScript": "The desk's AI isn't looking up facts — it's predicting the most likely-sounding next words. That's why the extra detail in some of those drafts felt so believable. It's not lying on purpose. It's just really good at sounding right, and your job all shift was to notice the difference."
 }
