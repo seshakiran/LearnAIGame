@@ -47,6 +47,7 @@ namespace LearnAIGame.Gameplay
         private int _totalCards;
         private int _topicIndex;
         private int _topicsCompletedThisSession;
+        private bool _escalationFired;
 
         private void Start()
         {
@@ -103,6 +104,7 @@ namespace LearnAIGame.Gameplay
         {
             _score = 0;
             _totalCards = _burst.cards.Count;
+            _escalationFired = false;
 
             yield return CaseBriefingScreen.Show(_canvas.transform, _burst);
 
@@ -142,6 +144,37 @@ namespace LearnAIGame.Gameplay
             yield return null;
 
             yield return ShowRevealPanel(card, correct, isCheckpoint);
+
+            // The case interrupts once, only if the player's own choices drove the
+            // meter into its danger zone — a scripted beat that fires regardless of
+            // performance wouldn't feel like the case reacting to you.
+            if (!isCheckpoint && !_escalationFired && _header != null && _header.MeterValue >= 75
+                && !string.IsNullOrEmpty(_burst.escalationLine))
+            {
+                _escalationFired = true;
+                yield return ShowCaseUpdatePanel(_burst.escalationLine);
+            }
+        }
+
+        private IEnumerator ShowCaseUpdatePanel(string line)
+        {
+            var panel = UIFactory.CreateFullScreenPanel(_canvas.transform, GamePalette.ScreenSurface, "CaseUpdatePanel");
+
+            UIFactory.CreateLabel(panel, "CASE UPDATE", 22, new Vector2(0, 160), new Vector2(600, 40), TextAnchor.MiddleCenter, FontStyle.Bold, GamePalette.Rose);
+            UIFactory.CreateLabel(panel, line, 28, new Vector2(0, 40), new Vector2(760, 220), TextAnchor.MiddleCenter, FontStyle.Normal, GamePalette.TextLight, autoShrink: true, minFontSize: 18);
+
+            if (_header != null && !string.IsNullOrEmpty(_burst.meterLabel))
+            {
+                var meterColor = BurstHeader.ColorForMeterValue(_header.MeterValue);
+                UIFactory.CreateLabel(panel, $"{_burst.meterLabel}: {_header.MeterValue}", 22, new Vector2(0, -100), new Vector2(500, 40), TextAnchor.MiddleCenter, FontStyle.Bold, meterColor);
+            }
+
+            var tapped = false;
+            UIFactory.CreateButton(panel, "Keep going →", new Vector2(0, -220), new Vector2(300, 90), () => tapped = true, GamePalette.Rose, GamePalette.TextDark);
+
+            yield return new WaitUntil(() => tapped);
+            Destroy(panel.gameObject);
+            yield return null;
         }
 
         private IEnumerator ShowRevealPanel(JudgmentCard card, bool correct, bool isCheckpoint)
@@ -157,6 +190,18 @@ namespace LearnAIGame.Gameplay
 
             var explanationCard = UIFactory.CreateSurface(panel, GamePalette.CardSurface, new Vector2(0, 20), new Vector2(820, 260), 28, "ExplanationCard");
             UIFactory.CreateLabel(explanationCard.transform, card.explanation, 25, Vector2.zero, new Vector2(740, 220), TextAnchor.MiddleCenter, FontStyle.Normal, GamePalette.TextLight, autoShrink: true, minFontSize: 18);
+
+            // The case talking back — a per-swipe consequence line, not just a
+            // color-coded number, so the meter reads as a system reacting to this
+            // specific decision rather than a static score sitting in the header.
+            if (!isCheckpoint && _header != null && !string.IsNullOrEmpty(_burst.meterLabel))
+            {
+                var meterColor = BurstHeader.ColorForMeterValue(_header.MeterValue);
+                var meterLine = correct
+                    ? $"{_burst.meterLabel} holds at {_header.MeterValue}."
+                    : $"{_burst.meterLabel} slips to {_header.MeterValue}.";
+                UIFactory.CreateLabel(panel, meterLine, 20, new Vector2(0, -170), new Vector2(700, 40), TextAnchor.MiddleCenter, FontStyle.Bold, meterColor);
+            }
 
             var tapped = false;
             UIFactory.CreateButton(panel, isCheckpoint ? "Continue →" : "Next →", new Vector2(0, -240), new Vector2(300, 90), () => tapped = true, accent, GamePalette.TextDark);

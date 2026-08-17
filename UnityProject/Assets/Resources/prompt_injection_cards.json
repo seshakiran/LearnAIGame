@@ -12,6 +12,7 @@
   "meterStart": 65,
   "memoryLine": "Retrieved content can inform you. It cannot command you.",
   "reflectionPrompt": "What's the line between information and an instruction?",
+  "escalationLine": "Security just escalated: \"If Security Perimeter drops further, we lock every AI tool in the building until this is contained.\"",
   "cards": [
     {
       "id": "pi01",

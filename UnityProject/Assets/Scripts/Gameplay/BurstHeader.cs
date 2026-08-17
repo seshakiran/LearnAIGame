@@ -122,11 +122,18 @@ namespace LearnAIGame.Gameplay
             RenderMeter();
         }
 
+        public int MeterValue => _meterValue;
+
+        public static Color ColorForMeterValue(int value)
+        {
+            return value >= 70 ? GamePalette.Rose : value >= 40 ? GamePalette.Amber : GamePalette.Lime;
+        }
+
         private void RenderMeter()
         {
             if (_meterLabel == null) return;
             _meterLabel.text = $"{_meterName}: {_meterValue}";
-            _meterLabel.color = _meterValue >= 70 ? GamePalette.Rose : _meterValue >= 40 ? GamePalette.Amber : GamePalette.Lime;
+            _meterLabel.color = ColorForMeterValue(_meterValue);
         }
 
         public void Destroy()

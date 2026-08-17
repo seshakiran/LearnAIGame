@@ -12,6 +12,7 @@
   "meterStart": 50,
   "memoryLine": "A real source is not the same as the right source.",
   "reflectionPrompt": "What would you check before trusting a cited answer?",
+  "escalationLine": "Meridian's ops lead just messaged: \"Two more customers just called in. Retrieval Confidence can't keep dropping like this.\"",
   "cards": [
     {
       "id": "rag01",

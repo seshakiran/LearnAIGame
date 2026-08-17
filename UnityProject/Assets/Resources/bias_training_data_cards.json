@@ -12,6 +12,7 @@
   "meterStart": 60,
   "memoryLine": "A pattern from the past can repeat the wrong future.",
   "reflectionPrompt": "Which finding surprised you the most, and why?",
+  "escalationLine": "The compliance lead just pinged you: \"The regulator is going to ask about every finding you clear — including the ones you didn't flag.\"",
   "cards": [
     {
       "id": "btd01",

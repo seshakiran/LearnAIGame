@@ -30,6 +30,11 @@ namespace LearnAIGame.Cards
         public string memoryLine;       // Reveal: short sticky takeaway
         public string reflectionPrompt; // Reveal: one reflective question, not a fact restated
 
+        // Fires once, mid-burst, the first time the live meter crosses into its
+        // danger zone (>=75) — the case interrupting to react to how the player is
+        // actually doing, not a scripted beat that fires regardless of performance.
+        public string escalationLine;
+
         public List<JudgmentCard> cards;
         public JudgmentCard checkpointCard;
         public string feynmanScript;
