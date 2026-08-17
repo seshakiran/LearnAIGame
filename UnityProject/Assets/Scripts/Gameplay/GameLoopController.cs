@@ -64,6 +64,7 @@ namespace LearnAIGame.Gameplay
 
         private IEnumerator Bootstrap()
         {
+            yield return GameHomeScreen.Show(_canvas.transform, TopicTitles[_topicIndex], _burst);
             yield return TopicPathScreen.Show(_canvas.transform, TopicTitles, _topicsCompletedThisSession, _topicIndex);
             yield return RunSession();
         }
@@ -310,22 +311,33 @@ namespace LearnAIGame.Gameplay
             return entries;
         }
 
+        /// Deep Trace's "Case Closed" beat (PLAN.md §13.2) — a stamp, not a stub. XP
+        /// and rank persist across cases so the game reads as one investigator's
+        /// career, not a topic list resetting to zero every time.
         private IEnumerator ShowPayoffStub()
         {
+            var xpEarned = RankTracker.RegisterCaseClosed(_score, _totalCards);
             var panel = UIFactory.CreateFullScreenPanel(_canvas.transform, GamePalette.ScreenSurface, "PayoffPanel");
 
-            UIFactory.CreateLabel(panel, "Topic complete!", 44, new Vector2(0, 200), new Vector2(700, 70), TextAnchor.MiddleCenter, FontStyle.Bold, GamePalette.Lime);
-            UIFactory.CreateLabel(panel, "Skill-tree tile lit up (stub)", 26, new Vector2(0, 100), new Vector2(700, 50), TextAnchor.MiddleCenter, FontStyle.Normal, GamePalette.TextMuted);
+            var caseLabel = string.IsNullOrEmpty(_burst.caseCode) ? "CASE CLOSED" : $"{_burst.caseCode.ToUpperInvariant()}: CASE CLOSED";
+            UIFactory.CreateLabel(panel, caseLabel, 22, new Vector2(0, 260), new Vector2(700, 40), TextAnchor.MiddleCenter, FontStyle.Bold, GamePalette.Amber);
+            UIFactory.CreateLabel(panel, "CASE CLOSED", 52, new Vector2(0, 180), new Vector2(700, 80), TextAnchor.MiddleCenter, FontStyle.Bold, GamePalette.Lime);
+
+            UIFactory.CreateLabel(panel, $"+{xpEarned} XP", 26, new Vector2(0, 90), new Vector2(500, 44), TextAnchor.MiddleCenter, FontStyle.Bold, GamePalette.TextLight);
+            UIFactory.CreateLabel(panel, $"{RankTracker.CurrentRank} · {RankTracker.CurrentXp} XP total", 18, new Vector2(0, 40), new Vector2(600, 36), TextAnchor.MiddleCenter, FontStyle.Normal, GamePalette.TextMuted);
+
+            var nextIndex = (_topicIndex + 1) % TopicResourceNames.Length;
+            UIFactory.CreateLabel(panel, $"Next Case: {TopicTitles[nextIndex]}", 20, new Vector2(0, -60), new Vector2(700, 44), TextAnchor.MiddleCenter, FontStyle.Italic, GamePalette.TextMuted, autoShrink: true, minFontSize: 15);
 
             var tapped = false;
-            UIFactory.CreateButton(panel, "Next Topic →", new Vector2(0, -260), new Vector2(300, 90), () => tapped = true, GamePalette.Lime, GamePalette.TextDark);
+            UIFactory.CreateButton(panel, "Next Case →", new Vector2(0, -260), new Vector2(300, 90), () => tapped = true, GamePalette.Lime, GamePalette.TextDark);
 
             yield return new WaitUntil(() => tapped);
             Destroy(panel.gameObject);
             yield return null;
 
             _topicsCompletedThisSession++;
-            _topicIndex = (_topicIndex + 1) % TopicResourceNames.Length;
+            _topicIndex = nextIndex;
 
             yield return TopicPathScreen.Show(_canvas.transform, TopicTitles, _topicsCompletedThisSession, _topicIndex);
 

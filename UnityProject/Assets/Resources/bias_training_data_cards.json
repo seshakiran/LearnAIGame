@@ -5,7 +5,7 @@
   "caseCode": "Case 02",
   "caseTitle": "The Favorites",
   "skillLine": "Tonight's Skill: Spot bias hiding behind data",
-  "missionLine": "A regulator complaint just triggered an emergency audit at Amberline Group — you're the auditor with one week to find what their AI systems got wrong.",
+  "missionLine": "You've been assigned to Case 02: a regulator complaint just triggered an emergency audit at Amberline Group. Find what their AI systems got wrong before the report is due.",
   "incidentHeadline": "The complaint named one system. The audit is turning up more.",
   "stakesLines": ["Screens 2,000 resumes a week", "One group's pass rate is 3x lower", "No one flagged it until an audit"],
   "meterLabel": "Screening Fairness",

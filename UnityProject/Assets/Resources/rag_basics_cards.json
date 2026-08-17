@@ -5,7 +5,7 @@
   "caseCode": "Case 03",
   "caseTitle": "Wrong Document, Right Words",
   "skillLine": "Tonight's Skill: Catch a fluent answer with the wrong source",
-  "missionLine": "A customer missed their flight after Meridian's bot cited outdated visa guidance — now you're reviewing every retrieval-powered assistant before the next one goes out wrong.",
+  "missionLine": "You've been assigned to Case 03: a customer missed a flight after Meridian's bot cited outdated visa guidance. Review every retrieval-powered assistant before another one ships a wrong answer.",
   "incidentHeadline": "The retrieval logs are full of confident answers built on the wrong document.",
   "stakesLines": ["Every answer cites a real source", "1 in 5 citations is the wrong version", "Staff are acting on it before anyone checks"],
   "meterLabel": "Retrieval Confidence",

@@ -5,7 +5,7 @@
   "caseCode": "Case 04",
   "caseTitle": "The Document Talks Back",
   "skillLine": "Tonight's Skill: Catch instructions hiding inside retrieved content",
-  "missionLine": "Security found hidden instructions embedded in one flagged ticket — you're on incident response, reviewing every AI tool's queue before more slip through.",
+  "missionLine": "You've been assigned to Case 04: security found hidden instructions embedded in one flagged ticket. Review every AI tool's queue before more slip through.",
   "incidentHeadline": "Retrieved documents are giving your AI tools new orders — and some almost worked.",
   "stakesLines": ["Reads every attachment automatically", "Hidden instructions found in 1 of 40 tickets", "One nearly triggered a refund it shouldn't have"],
   "meterLabel": "Security Perimeter",

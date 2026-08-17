@@ -5,7 +5,7 @@
   "caseCode": "Case 01",
   "caseTitle": "Confident and Wrong",
   "skillLine": "Tonight's Skill: Catch confident answers that are wrong",
-  "missionLine": "You're the last reviewer standing between the desk's AI drafts and the client's inbox.",
+  "missionLine": "You've been assigned to Case 01: a research desk's AI is drafting client answers fast — and some are confidently wrong. Review every draft before it ships.",
   "incidentHeadline": "The queue just spiked — and some of these drafts are wrong.",
   "stakesLines": ["Answers ship 4x faster", "1 in 6 drafts has a fabricated detail", "No review step catches it before send"],
   "meterLabel": "Client Trust",
