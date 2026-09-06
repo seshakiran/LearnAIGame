@@ -22,7 +22,11 @@
           "evidence": [],
           "choices": [],
           "concept": "",
-          "lesson": ""
+          "lesson": "",
+          "artResource": "StoryArt/platform",
+          "artCaption": "Enter the incident with questions, not assumptions.",
+          "learningObjective": "Understand your role: use AI to organize information, then verify its claims.",
+          "artFocusX": 0.75
         },
         {
           "id": "claim",
@@ -59,7 +63,11 @@
             }
           ],
           "concept": "AI basics / hallucination",
-          "lesson": "An AI assistant generates an answer from patterns and supplied context. Fluent wording is not verification. Here it added identities and contents that the camera never established."
+          "lesson": "An AI assistant generates an answer from patterns and supplied context. Fluent wording is not verification. Here it added identities and contents that the camera never established.",
+          "artResource": "StoryArt/platform",
+          "artCaption": "An object on the platform. An AI already calling it a weapon.",
+          "learningObjective": "Distinguish a direct observation from an AI-generated inference.",
+          "artFocusX": 0.75
         },
         {
           "id": "frame",
@@ -92,7 +100,11 @@
           "concept": "Framing an AI task",
           "lesson": "Useful requests specify the job, available evidence, output format, and what to do when information is missing. A better request helps verification; it does not guarantee accuracy.",
           "afterError": "PRIYA: “We corrected the first alert. Let’s make the next request narrower.”",
-          "afterSuccess": "PRIYA: “Good distinction on that first alert. Let’s keep the analysis traceable.”"
+          "afterSuccess": "PRIYA: “Good distinction on that first alert. Let’s keep the analysis traceable.”",
+          "artResource": "StoryArt/platform",
+          "artCaption": "At command, the next question matters.",
+          "learningObjective": "Frame a bounded AI task with traceable sources and explicit unknowns.",
+          "artFocusX": 0.75
         },
         {
           "id": "lure",
@@ -129,7 +141,11 @@
             }
           ],
           "concept": "Uncertainty",
-          "lesson": "An unconfirmed explanation can coexist with a serious concern. State what is known, what is unknown, and the evidence-based next question."
+          "lesson": "An unconfirmed explanation can coexist with a serious concern. State what is known, what is unknown, and the evidence-based next question.",
+          "artResource": "StoryArt/platform",
+          "artCaption": "A phone message. A brother out of sight.",
+          "learningObjective": "Communicate uncertainty without dismissing an urgent concern.",
+          "artFocusX": 0.75
         },
         {
           "id": "cliff01",
@@ -140,7 +156,11 @@
           "evidence": [],
           "choices": [],
           "concept": "",
-          "lesson": ""
+          "lesson": "",
+          "artResource": "StoryArt/platform",
+          "artCaption": "Two clocks. One missing stretch of time.",
+          "learningObjective": "Notice when conflicting inputs require investigation before analysis.",
+          "artFocusX": 0.75
         }
       ]
     },
@@ -187,7 +207,11 @@
             }
           ],
           "concept": "Confidence and calibration",
-          "lesson": "A score only means what its system definition and validation support. A similarity score is not automatically a probability that someone is responsible."
+          "lesson": "A score only means what its system definition and validation support. A similarity score is not automatically a probability that someone is responsible.",
+          "artResource": "StoryArt/face",
+          "artCaption": "The same jacket—or just a similar one?",
+          "learningObjective": "Interpret an AI score without mistaking similarity for identity.",
+          "artFocusX": 0.5
         },
         {
           "id": "clock",
@@ -224,7 +248,11 @@
             }
           ],
           "concept": "Data quality",
-          "lesson": "AI analysis inherits problems in its inputs. Preserve originals and record transformations so a corrected timeline can be audited."
+          "lesson": "AI analysis inherits problems in its inputs. Preserve originals and record transformations so a corrected timeline can be audited.",
+          "artResource": "StoryArt/face",
+          "artCaption": "Reconstruct the sequence from original records.",
+          "learningObjective": "Account for data-quality problems while preserving original timestamps.",
+          "artFocusX": 0.5
         },
         {
           "id": "bias",
@@ -261,7 +289,11 @@
             }
           ],
           "concept": "Bias in data",
-          "lesson": "Historical labels can reflect past decisions and unequal scrutiny. Reproducing those labels does not establish accuracy or fairness for a new task."
+          "lesson": "Historical labels can reflect past decisions and unequal scrutiny. Reproducing those labels does not establish accuracy or fairness for a new task.",
+          "artResource": "StoryArt/face",
+          "artCaption": "A historical label is not tonight’s evidence.",
+          "learningObjective": "Identify how training labels and proxy features can reproduce bias.",
+          "artFocusX": 0.5
         },
         {
           "id": "cliff02",
@@ -272,7 +304,11 @@
           "evidence": [],
           "choices": [],
           "concept": "",
-          "lesson": ""
+          "lesson": "",
+          "artResource": "StoryArt/face",
+          "artCaption": "A new message changes the working picture.",
+          "learningObjective": "Update a hypothesis when new evidence arrives.",
+          "artFocusX": 0.5
         }
       ]
     },
@@ -319,7 +355,11 @@
             }
           ],
           "concept": "Source authority",
-          "lesson": "Professional presentation and logos are claims of authority. Check the actual governing record through a trusted source."
+          "lesson": "Professional presentation and logos are claims of authority. Check the actual governing record through a trusted source.",
+          "artResource": "StoryArt/message",
+          "artCaption": "The offer borrows the look of authority.",
+          "learningObjective": "Evaluate a source’s authority beyond its branding or presentation.",
+          "artFocusX": 0.5
         },
         {
           "id": "retrieval",
@@ -356,7 +396,11 @@
             }
           ],
           "concept": "Retrieval-augmented generation (RAG)",
-          "lesson": "RAG supplies retrieved documents to a model. Retrieval can return an old or irrelevant document. Ranking is not a guarantee of current, governing evidence."
+          "lesson": "RAG supplies retrieved documents to a model. Retrieval can return an old or irrelevant document. Ranking is not a guarantee of current, governing evidence.",
+          "artResource": "StoryArt/message",
+          "artCaption": "A closed passage on an old map. A different status tonight.",
+          "learningObjective": "Check retrieved information for currency and relevance to the case.",
+          "artFocusX": 0.5
         },
         {
           "id": "claimspan",
@@ -387,7 +431,11 @@
             }
           ],
           "concept": "Claim-to-source checking",
-          "lesson": "Verify the exact claim against the cited passage. A real, current source can still fail to support the conclusion attached to it."
+          "lesson": "Verify the exact claim against the cited passage. A real, current source can still fail to support the conclusion attached to it.",
+          "artResource": "StoryArt/message",
+          "artCaption": "A working citation. A conclusion it never states.",
+          "learningObjective": "Test whether a cited passage actually supports the attached claim.",
+          "artFocusX": 0.5
         },
         {
           "id": "cliff03",
@@ -398,7 +446,11 @@
           "evidence": [],
           "choices": [],
           "concept": "",
-          "lesson": ""
+          "lesson": "",
+          "artResource": "StoryArt/message",
+          "artCaption": "A familiar voice arrives through an unfamiliar route.",
+          "learningObjective": "Recognize why provenance matters for AI-generated or forwarded media.",
+          "artFocusX": 0.5
         }
       ]
     },
@@ -445,7 +497,11 @@
             }
           ],
           "concept": "Synthetic media and provenance",
-          "lesson": "Voices can be imitated, edited, or misattributed. Sound alone cannot authenticate an instruction. Verify through an established independent channel."
+          "lesson": "Voices can be imitated, edited, or misattributed. Sound alone cannot authenticate an instruction. Verify through an established independent channel.",
+          "artResource": "StoryArt/voice",
+          "artCaption": "The voice sounds right. The source is missing.",
+          "learningObjective": "Authenticate a consequential instruction through a trusted channel.",
+          "artFocusX": 0.5
         },
         {
           "id": "injection",
@@ -482,7 +538,11 @@
             }
           ],
           "concept": "Prompt injection",
-          "lesson": "Prompt injection is an attempt to make an assistant follow instructions found inside untrusted content. Retrieved text can supply evidence; it cannot authorize new tasks or disclosure."
+          "lesson": "Prompt injection is an attempt to make an assistant follow instructions found inside untrusted content. Retrieved text can supply evidence; it cannot authorize new tasks or disclosure.",
+          "artResource": "StoryArt/voice",
+          "artCaption": "The retrieved page stops describing and starts commanding.",
+          "learningObjective": "Separate untrusted document content from authorized instructions.",
+          "artFocusX": 0.5
         },
         {
           "id": "intent",
@@ -513,7 +573,11 @@
             }
           ],
           "concept": "Attribution and uncertainty",
-          "lesson": "Recognizing misleading content does not identify its creator. Separate evidence of an attack from evidence of who carried it out."
+          "lesson": "Recognizing misleading content does not identify its creator. Separate evidence of an attack from evidence of who carried it out.",
+          "artResource": "StoryArt/voice",
+          "artCaption": "Connected events. An author still unknown.",
+          "learningObjective": "Separate evidence of manipulation from attribution of its creator.",
+          "artFocusX": 0.5
         },
         {
           "id": "cliff04",
@@ -524,7 +588,11 @@
           "evidence": [],
           "choices": [],
           "concept": "",
-          "lesson": ""
+          "lesson": "",
+          "artResource": "StoryArt/voice",
+          "artCaption": "An instruction becomes a pending action.",
+          "learningObjective": "Recognize the difference between an assistant’s words and its tool actions.",
+          "artFocusX": 0.5
         }
       ]
     },
@@ -571,7 +639,11 @@
             }
           ],
           "concept": "Agents and least privilege",
-          "lesson": "An agent can take actions through tools. Give it only the access its task requires, and enforce approval for consequential actions outside the model’s text."
+          "lesson": "An agent can take actions through tools. Give it only the access its task requires, and enforce approval for consequential actions outside the model’s text.",
+          "artResource": "StoryArt/chain",
+          "artCaption": "The witness file is waiting at an approval gate.",
+          "learningObjective": "Match agent permissions to the task and review consequential actions.",
+          "artFocusX": 0.5
         },
         {
           "id": "agreement",
@@ -608,7 +680,11 @@
             }
           ],
           "concept": "Multi-agent systems / correlated error",
-          "lesson": "Multiple agents can repeat the same mistake when they share a source or copy one another. Agreement is not independent corroboration."
+          "lesson": "Multiple agents can repeat the same mistake when they share a source or copy one another. Agreement is not independent corroboration.",
+          "artResource": "StoryArt/chain",
+          "artCaption": "Three reports, one source underneath.",
+          "learningObjective": "Check whether multiple agents provide independent corroboration.",
+          "artFocusX": 0.5
         },
         {
           "id": "evaluation",
@@ -639,7 +715,11 @@
             }
           ],
           "concept": "Evaluation and defense in depth",
-          "lesson": "A single passing example is weak evidence. Test varied failure modes and normal tasks, and retain independent permission controls and monitoring."
+          "lesson": "A single passing example is weak evidence. Test varied failure modes and normal tasks, and retain independent permission controls and monitoring.",
+          "artResource": "StoryArt/chain",
+          "artCaption": "One successful test. A much larger claim.",
+          "learningObjective": "Assess whether testing supports the proposed deployment permissions.",
+          "artFocusX": 0.5
         },
         {
           "id": "cliff05",
@@ -650,7 +730,11 @@
           "evidence": [],
           "choices": [],
           "concept": "",
-          "lesson": ""
+          "lesson": "",
+          "artResource": "StoryArt/morning",
+          "artCaption": "A verified call finally brings relief.",
+          "learningObjective": "Distinguish direct confirmation from earlier unverified reassurance.",
+          "artFocusX": 0.5
         }
       ]
     },
@@ -671,7 +755,11 @@
           "evidence": [],
           "choices": [],
           "concept": "",
-          "lesson": ""
+          "lesson": "",
+          "artResource": "StoryArt/morning",
+          "artCaption": "The next shift will depend on your account.",
+          "learningObjective": "Apply evidence, source, and permission checks independently.",
+          "artFocusX": 0.5
         },
         {
           "id": "finalclaim",
@@ -709,7 +797,11 @@
           ],
           "concept": "Assessment / evidence",
           "lesson": "A summary must preserve the scope of the original testimony. Neither identity nor a completed theft is established here.",
-          "assessment": true
+          "assessment": true,
+          "artResource": "StoryArt/morning",
+          "artCaption": "A fresh statement enters the final briefing.",
+          "learningObjective": "Demonstrate evidence-based judgment using a new witness account.",
+          "artFocusX": 0.5
         },
         {
           "id": "finalsource",
@@ -747,7 +839,11 @@
           ],
           "concept": "Assessment / source hierarchy",
           "lesson": "Prefer a current authenticated record that governs this incident over an undated forwarded image.",
-          "assessment": true
+          "assessment": true,
+          "artResource": "StoryArt/morning",
+          "artCaption": "One update must reach the families.",
+          "learningObjective": "Demonstrate source evaluation using conflicting new records.",
+          "artFocusX": 0.5
         },
         {
           "id": "finalcontrol",
@@ -785,7 +881,11 @@
           ],
           "concept": "Assessment / deployment judgment",
           "lesson": "Test the behavior you plan to authorize. Accurate summaries do not prove that autonomous disclosure decisions are safe.",
-          "assessment": true
+          "assessment": true,
+          "artResource": "StoryArt/morning",
+          "artCaption": "The last recommendation is yours to sign.",
+          "learningObjective": "Demonstrate deployment judgment using new evaluation evidence.",
+          "artFocusX": 0.5
         }
       ]
     }

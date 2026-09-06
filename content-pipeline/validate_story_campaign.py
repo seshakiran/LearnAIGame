@@ -17,6 +17,12 @@ def validate(path):
             assert beat['id'] not in beat_ids, f"Duplicate beat: {beat['id']}"
             beat_ids.add(beat['id'])
             assert beat['body'] and beat['speaker']
+            assert beat.get('learningObjective'), f"Missing learning goal: {beat['id']}"
+            assert beat.get('artCaption'), f"Missing scene caption: {beat['id']}"
+            art = beat.get('artResource', '')
+            assert art.startswith('StoryArt/') and '..' not in art
+            assert (ROOT / 'UnityProject/Assets/Resources' / (art + '.png')).is_file(), f"Missing artwork: {art}"
+            assert 0 <= beat.get('artFocusX', .5) <= 1
             for evidence in beat['evidence']:
                 assert evidence['id'] not in evidence_ids
                 evidence_ids.add(evidence['id'])

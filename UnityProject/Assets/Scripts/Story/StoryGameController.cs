@@ -113,26 +113,60 @@ namespace LearnAIGame.Story
             b.onClick.AddListener(() => action());
         }
 
-        private void SubwayArt()
+        private void SceneArt(StoryBeat beat, Action back)
         {
+            var texture = Resources.Load<Texture2D>(beat.artResource);
+            if (texture == null) return;
             var root = Card();
-            var area = new GameObject("Platform illustration", typeof(RectTransform), typeof(LayoutElement)).GetComponent<RectTransform>();
-            area.SetParent(root, false); area.gameObject.GetComponent<LayoutElement>().preferredHeight = 240;
-            UIFactory.CreateSurface(area, GamePalette.ChipSurface, new Vector2(0, 10), new Vector2(640, 130), 12);
-            for (int i = 0; i < 5; i++)
-                UIFactory.CreateSurface(area, GamePalette.BackgroundDeep, new Vector2(-250 + i * 125, 25), new Vector2(90, 65), 8);
-            UIFactory.CreateSurface(area, accent, new Vector2(0, -70), new Vector2(680, 5), 0);
-            UIFactory.CreateSurface(area, GamePalette.Blue, new Vector2(195, -25), new Vector2(48, 66), 6);
-            UIFactory.CreateLabel(area, "?", 32, new Vector2(195, -25), new Vector2(42, 58), color: GamePalette.TextDark);
-            Label("20:42  /  MIDTOWN MANHATTAN", 18, accent, parent: root);
-            Label("LOST SOMETHING? FIND IT HERE.", 24, ink, true, root);
+            root.GetComponent<VerticalLayoutGroup>().padding = new RectOffset(0, 0, 0, 20);
+            var go = new GameObject("Story illustration", typeof(RectTransform), typeof(LayoutElement), typeof(RawImage));
+            go.transform.SetParent(root, false);
+            go.GetComponent<LayoutElement>().preferredHeight = 480;
+            go.GetComponent<RawImage>().texture = texture;
+            go.GetComponent<RawImage>().raycastTarget = false;
+            go.AddComponent<StoryArtwork>();
+            Label("  ILLUSTRATED SCENE / NOT AN EVIDENCE RECORD", 19, accent, parent: root);
+            Label("  " + beat.artCaption, 25, ink, parent: root);
+            Button("Expand scene / full-screen view", () => ImmersiveScene(beat, back));
+        }
+
+        private void LearningGoal(StoryBeat beat)
+        {
+            if (string.IsNullOrEmpty(beat.learningObjective)) return;
+            var card = Card();
+            Label(beat.assessment ? "WHAT YOU ARE APPLYING" : "WHAT YOU ARE LEARNING", 20, GamePalette.Blue, true, card);
+            Label(beat.learningObjective, 27, ink, parent: card);
+        }
+
+        private void ImmersiveScene(StoryBeat beat, Action back)
+        {
+            NewPage("Illustrated scene / not an evidence record", beat.title);
+            var backdrop = new GameObject("Full-screen artwork", typeof(RectTransform), typeof(RawImage));
+            var rect = backdrop.GetComponent<RectTransform>();
+            rect.SetParent(page, false); rect.SetAsFirstSibling();
+            rect.anchorMin = Vector2.zero; rect.anchorMax = Vector2.one;
+            rect.offsetMin = rect.offsetMax = Vector2.zero;
+            backdrop.GetComponent<RawImage>().texture = Resources.Load<Texture2D>(beat.artResource);
+            backdrop.GetComponent<RawImage>().raycastTarget = false;
+            var artwork = backdrop.AddComponent<StoryArtwork>();
+            artwork.fullScreen = true;
+            artwork.focusX = beat.artFocusX;
+            // A wash protects heading contrast; evidence and decisions stay in the
+            // comic view so decorative art never competes with original records.
+            stack.parent.GetComponent<Image>().color = new Color(0.02f, 0.04f, 0.07f, .65f);
+            var space = new GameObject("Scene breathing room", typeof(RectTransform), typeof(LayoutElement));
+            space.transform.SetParent(stack, false);
+            space.GetComponent<LayoutElement>().preferredHeight = 300;
+            var caption = Card(); Label(beat.artCaption, 30, ink, parent: caption);
+            LearningGoal(beat);
+            Button("Return to comic view", back, true);
         }
 
         private void Home()
         {
             NewPage("Learn AI / Story 01", campaign.title);
             Label(campaign.subtitle, 25, mutedInk);
-            SubwayArt();
+            SceneArt(campaign.chapters[0].beats[0], Home);
             Label(campaign.premise, 30);
             Button(save.completed ? "View your case outcome" : save.decisions.Count > 0 || save.beat > 0 ? "Resume investigation" : "Take the call", () => { if (save.completed) Ending(); else ShowBeat(); }, true);
             Button("Case chapters & learning path", Chapters);
@@ -180,6 +214,8 @@ namespace LearnAIGame.Story
             var decision = save.Find(beat.id);
             if (decision != null) { Outcome(beat, decision.choice); return; }
             NewPage($"{Chapter.time} / CH {save.chapter + 1:00} / {save.beat + 1} OF {Chapter.beats.Length} / {Chapter.location}", beat.title);
+            SceneArt(beat, ShowBeat);
+            LearningGoal(beat);
             Label(beat.speaker, 22, GamePalette.Blue, true);
             var previous = PreviousSupported();
             var reaction = previous == false ? beat.afterError : previous == true ? beat.afterSuccess : null;
@@ -215,6 +251,7 @@ namespace LearnAIGame.Story
         {
             NewPage("Original record / " + evidence.id, evidence.title);
             Label(evidence.source, 24, GamePalette.Blue);
+            LearningGoal(Beat);
             var card = Card(); Label(evidence.text, 30, ink, parent: card);
             Label("A record can itself contain an unverified claim. Compare what it says with who supplied it and what it actually establishes.", 22, mutedInk);
             Button("Mark reviewed & return", () =>
@@ -236,6 +273,7 @@ namespace LearnAIGame.Story
         {
             var choice = beat.choices[selected];
             NewPage(beat.assessment ? "Briefing entry locked" : "Radio / response", beat.assessment ? "Recorded for review." : choice.supported ? "The team has your update." : "Command requests a correction.");
+            LearningGoal(beat);
             Label("YOUR DECISION", 20, accent);
             Label(choice.text, 28);
             if (beat.assessment)

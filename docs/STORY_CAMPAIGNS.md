@@ -51,3 +51,7 @@ Advanced episodes need richer interactions and authored rubric-based explanation
 - All runtime C# scripts compiled against the installed Unity 6000.0.81f1 assemblies with Roslyn. One existing unused-field warning remains in SwipeCardView.
 - Full Unity batch / Play-mode validation is blocked by the local Unity Licensing Client failing to initialize. Mobile layout, real input, audio, and save/resume need an Editor playthrough after licensing is restored.
 - The older `validate_learn_ai_game.py` reports pre-existing 35–45-word-budget failures in three legacy topic scripts; those unused topic assets were not changed by this campaign.
+
+## Illustrated presentation
+
+The campaign now includes six graphic-novel chapter keyframes, individual scene captions and explicit learning goals on all 25 story beats. Comic panels preserve the complete image; an optional full-screen illustration view uses focal-point cropping. See `STORY_ART.md` for artwork prompts, layout reasoning, and the comparison mockup.
