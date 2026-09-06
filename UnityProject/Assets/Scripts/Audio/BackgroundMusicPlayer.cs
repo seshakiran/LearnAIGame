@@ -14,9 +14,10 @@ namespace LearnAIGame.Audio
 
         private AudioSource _source;
         private List<AudioClip> _playlist;
+        private bool _paused;
 
-        public void Pause() => _source?.Pause();
-        public void Resume() => _source?.UnPause();
+        public void Pause() { _paused = true; _source?.Pause(); }
+        public void Resume() { _paused = false; _source?.UnPause(); }
 
         public static BackgroundMusicPlayer CreateAndPlay(Transform parent)
         {
@@ -56,7 +57,7 @@ namespace LearnAIGame.Audio
                 _source.clip = _playlist[index];
                 _source.Play();
 
-                yield return new WaitWhile(() => _source.isPlaying);
+                yield return new WaitWhile(() => _paused || _source.isPlaying);
 
                 index++;
                 if (index >= _playlist.Count)

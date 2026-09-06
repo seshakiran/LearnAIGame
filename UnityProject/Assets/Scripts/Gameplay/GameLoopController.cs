@@ -53,6 +53,14 @@ namespace LearnAIGame.Gameplay
         {
             EnsureMainCamera();
 
+            // Story campaigns are the learner-facing entry point. Keep the original
+            // prototype available as source while migrating its reusable components.
+            gameObject.AddComponent<LearnAIGame.Story.StoryGameController>();
+        }
+
+        private void StartLegacyPrototype()
+        {
+
             _canvas = UIFactory.CreateRootCanvas();
             UIFactory.CreateFullScreenPanel(_canvas.transform, GamePalette.BackgroundDeep, "Backdrop");
             _music = BackgroundMusicPlayer.CreateAndPlay(transform);

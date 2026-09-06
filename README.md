@@ -1,7 +1,11 @@
 # LearnAIGame
 
-An invite-only, paid, prestige credential earned through play — teaching AI concepts through a casual game loop, gated by real assessments, and backed by a verifiable certificate.
+Learn AI judgment through contemporary interactive thrillers built in Unity.
 
-See [PLAN.md](./PLAN.md) for the full product spec, curriculum architecture, content pipeline, certificate system, access model, and phased build roadmap.
+The first playable story, **Last Train**, puts you at NYPD transit command during a fictional incident involving mysterious objects and misleading messages. Investigate original records, brief the team, learn from consequences, and complete a final evidence-based assessment.
 
-**Status:** early spec / pre-build. Evolving iteratively.
+Open `UnityProject/Assets/Scenes/Bootstrap.unity` in Unity 6000.0.81f1 and press **Play**.
+
+See [Story campaigns](docs/STORY_CAMPAIGNS.md) for gameplay, implementation, current limitations and the basic-to-advanced curriculum roadmap. [PLAN.md](PLAN.md) retains the earlier product design history.
+
+Validate story content with `python3 content-pipeline/validate_story_campaign.py`.
