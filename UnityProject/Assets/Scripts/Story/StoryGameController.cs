@@ -220,7 +220,7 @@ namespace LearnAIGame.Story
             var beat = Beat;
             var decision = save.Find(beat.id);
             if (decision != null) { Outcome(beat, decision.choice); return; }
-            NewPage($"{Chapter.time} / CH {save.chapter + 1:00} / {save.beat + 1} OF {Chapter.beats.Length} / {Chapter.location}", beat.title);
+            NewPage($"{Chapter.time} / CH {save.chapter + 1:00} / {Chapter.location}", beat.title);
             SceneArt(beat, ShowBeat);
             LearningGoal(beat);
             Label(beat.speaker, 22, GamePalette.Blue, true);
@@ -240,10 +240,11 @@ namespace LearnAIGame.Story
             if (beat.choices.Length > 0)
             {
                 Label(beat.question, 32, ink, true);
-                bool ready = Array.TrueForAll(beat.evidence, e => save.inspected.Contains(e.id));
+                bool ready = save.chapter == 0 || Array.TrueForAll(beat.evidence, e => save.inspected.Contains(e.id));
                 if (!ready) Label("Inspect each source above before sending your decision.", 23, accent);
                 if (beat.assessment) Label("FINAL BRIEFING / Feedback held until the case debrief.", 22, GamePalette.Blue);
-                for (int i = 0; i < beat.choices.Length; i++)
+                if (beat.interaction == "timeline") Timeline(beat);
+                else for (int i = 0; i < beat.choices.Length; i++)
                 {
                     int selected = i;
                     Button($"{i + 1:00} / {beat.choices[i].text}", () => Decide(selected), enabled: ready);
@@ -268,10 +269,44 @@ namespace LearnAIGame.Story
             }, true);
         }
 
+        private void Timeline(StoryBeat beat)
+        {
+            if (save.draftBeatId != beat.id || save.draftOrder == null)
+            {
+                save.draftBeatId = beat.id;
+                save.draftOrder = new List<string>();
+            }
+            Label("TAP EVENTS / EARLIEST FIRST", 20, accent);
+            for (int i = 0; i < save.draftOrder.Count; i++)
+            {
+                var item = Array.Find(beat.timelineItems, e => e.id == save.draftOrder[i]);
+                Label($"{i + 1}. {item.title}", 26, GamePalette.Blue);
+            }
+            foreach (var item in beat.timelineItems)
+            {
+                var captured = item;
+                if (save.draftOrder.Contains(item.id)) continue;
+                Button(item.title + "\n" + item.text, () =>
+                {
+                    save.draftOrder.Add(captured.id);
+                    StoryProgress.Store(campaign, save);
+                    ShowBeat();
+                });
+            }
+            if (save.draftOrder.Count > 0) Button("Undo last event", () =>
+            {
+                save.draftOrder.RemoveAt(save.draftOrder.Count - 1);
+                StoryProgress.Store(campaign, save); ShowBeat();
+            });
+            Button("Submit timeline", () => Decide(StoryFlow.CorrectOrder(beat, save.draftOrder) ? 0 : 1),
+                true, save.draftOrder.Count == beat.timelineItems.Length);
+        }
+
         private void Decide(int selected)
         {
             if (save.Find(Beat.id) != null) return;
-            save.decisions.Add(new StoryDecision { beatId = Beat.id, choice = selected });
+            save.decisions.Add(new StoryDecision { beatId = Beat.id, choice = selected,
+                order = Beat.interaction == "timeline" ? save.draftOrder.ToArray() : null });
             StoryProgress.Store(campaign, save);
             Outcome(Beat, selected);
         }
@@ -279,6 +314,13 @@ namespace LearnAIGame.Story
         private void Outcome(StoryBeat beat, int selected)
         {
             var choice = beat.choices[selected];
+            if (beat.interaction == "lead")
+            {
+                NewPage("Investigation", "Follow the lead.");
+                Label(choice.response);
+                Button("Open the lead", Next, true);
+                return;
+            }
             NewPage(beat.assessment ? "Briefing entry locked" : "Radio / response", beat.assessment ? "Recorded for review." : choice.supported ? "The team has your update." : "Command requests a correction.");
             LearningGoal(beat);
             Label("YOUR DECISION", 20, accent);
@@ -308,11 +350,22 @@ namespace LearnAIGame.Story
 
         private void Next()
         {
-            if (save.beat + 1 < Chapter.beats.Length) save.beat++;
+            bool finishedOpening = save.chapter == 0 && save.beat == Chapter.beats.Length - 1;
+            int next = StoryFlow.NextIndex(Chapter, save.beat, save.Find(Beat.id));
+            if (next >= 0) save.beat = next;
             else if (save.chapter + 1 < campaign.chapters.Length) { save.chapter++; save.beat = 0; }
             else save.completed = true;
             StoryProgress.Store(campaign, save);
-            ShowBeat();
+            if (finishedOpening) OpeningDebrief(); else ShowBeat();
+        }
+
+        private void OpeningDebrief()
+        {
+            NewPage("First playtest / chapter complete", "Would you take the next call?");
+            Label("You selected a lead, reconstructed a timeline, and briefed the team. Your progress is saved.");
+            Label("For this test, notice: did you want to know what happened next? Can you explain why the AI report needed checking?", 26, mutedInk);
+            Button("Continue to The Wrong Face", ShowBeat, true);
+            Button("Finish this playtest", Home);
         }
 
         private void Notebook(Action back)
@@ -336,6 +389,12 @@ namespace LearnAIGame.Story
                     var entry = Card(GamePalette.ChipSurface);
                     Label("DECISION / " + beat.title, 23, accent, true, entry);
                     Label(beat.choices[decision.choice].text, 25, ink, parent: entry);
+                    if (decision.order != null && beat.timelineItems != null)
+                        foreach (var id in decision.order)
+                        {
+                            var item = Array.Find(beat.timelineItems, e => e.id == id);
+                            if (item != null) Label(item.title + " / " + item.text, 23, mutedInk, parent: entry);
+                        }
                     if (!beat.assessment || save.completed)
                         Label(beat.lesson, 24, mutedInk, parent: entry);
                     else Label("Feedback sealed until case debrief.", 22, mutedInk, parent: entry);
@@ -351,7 +410,7 @@ namespace LearnAIGame.Story
             foreach (var chapter in campaign.chapters)
                 foreach (var beat in chapter.beats)
                 {
-                    var decision = save.Find(beat.id); if (decision == null) continue;
+                    var decision = save.Find(beat.id); if (decision == null || beat.interaction == "lead") continue;
                     bool supported = beat.choices[decision.choice].supported;
                     if (beat.assessment) { if (supported) final++; }
                     else { practiceTotal++; if (supported) practice++; }

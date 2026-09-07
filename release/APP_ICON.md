@@ -1,0 +1,5 @@
+# App icon
+
+Original generated with the built-in imagegen tool and copied to `UnityProject/Assets/Art/LastTrainIcon.png`. Visually reviewed: opaque square artwork, no text or official insignia. Source dimensions: 1254 × 1254, no alpha; Unity supplies exported icon sizes from the default icon. Verify the iOS asset catalog and 1024 × 1024 marketing icon in the actual Xcode export before uploading.
+
+Prompt: Use case: logo-brand. Create a production iOS app icon for LAST TRAIN, a fictional subway mystery game teaching AI judgment. Square 1024x1024 fully opaque edge-to-edge image. No rounded corners (iOS supplies the mask), no transparency, no words, no logos, no letters. Minimal bold graphic novel icon: deep navy background, large front-view silver subway carriage silhouette emerging from an amber tunnel arch, a small cyan illuminated rectangular object in foreground. Strong simple shapes and large contrast legible at 60px. Warm amber and cyan against midnight navy. Flat inked vector-like illustration with subtle texture, not a complex scenic painting. No police insignia, no weapons.

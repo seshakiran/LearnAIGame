@@ -4,7 +4,7 @@
 
 Open `UnityProject` in Unity 6000.0.81f1, open `Assets/Scenes/Bootstrap.unity`, and press Play. The existing GameLoop component starts the story player. No scene rewiring is needed.
 
-Last Train is a complete text-led first campaign: six chapters, 25 story beats, 18 decisions (15 coached, 3 held-feedback assessment decisions), original evidence records, character responses, three briefing outcomes, and a persistent evidence desk. Camera footage and voice messages are represented as authored transcripts and observations; they are not filmed cinematics. Existing local music is optional. All locations, records, and events are fictional.
+Last Train is a complete text-led first campaign: six chapters, 29 story beats, 19 decisions (one unscored lead choice, 15 coached decisions, 3 held-feedback assessment decisions), original evidence records, character responses, three briefing outcomes, and a persistent evidence desk. Camera footage and voice messages are represented as authored transcripts and observations; they are not filmed cinematics. Existing local music is optional. All locations, records, and events are fictional.
 
 The player opens every source before committing a choice. An answer is locked and saved before feedback, so closing the app cannot erase it. Wrong calls receive an in-world correction and an explanation. Final briefing feedback is held until the ending, including in the evidence notebook. Restarting requires confirmation. The campaign ends rather than cycling back to topic one.
 
@@ -65,3 +65,9 @@ The old 900-unit width scaling was replaced with density-normalized reading unit
 Every coached decision now has a short `simpleExplanation`: a familiar analogy, the case connection, and a practical check. Player-facing labels are “Why this matters” and “Take it with you.” These explanations are hidden for final assessment decisions until the ending. Narrative-only beats retain their learning objective and avoid interrupting the story with an extra lesson.
 
 Runtime QA remains pending: check the target phone sizes, tablet, and browser resize; inspect long evidence and choices; test expanded art and the return button; verify safe areas and touch scrolling. Direct C# compilation and content checks do not replace device playtesting.
+
+## Chapter 1 playtest revision and iOS preparation
+
+Chapter 1 now has a camera/witness lead choice, a tap-to-order timeline with undo and persisted draft, a recoverable branch after an unsupported briefing, and a stopping point before Chapter 2. Pure flow tests exercise both branches, the correction path, chapter exit, all six timeline permutations, and partial/duplicate rejection. Version 2 intentionally restarts version-1 saves.
+
+See `release/TESTFLIGHT.md` and `release/BETA_NOTES.md` for the export workflow, account prerequisites, beta copy and test protocol. TestFlight upload is deferred: the owner has no Apple Account yet. The Editor was refreshed and entered Play mode successfully during this session; this supersedes the earlier inability to launch Unity, but does not constitute a complete mobile playthrough. Batch validation cannot open the project concurrently with the running Editor. The selected local Editor module-files discrepancy must still be resolved before an iOS export.

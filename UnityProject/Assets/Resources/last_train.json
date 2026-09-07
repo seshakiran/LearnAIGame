@@ -1,6 +1,6 @@
 {
   "id": "last_train",
-  "version": 1,
+  "version": 2,
   "title": "LAST TRAIN",
   "subtitle": "An AI judgment thriller",
   "premise": "A strange offer is drawing commuters out of sight. Your team is on the platform. You are their eyes at command.",
@@ -17,7 +17,7 @@
           "id": "opening",
           "speaker": "DISPATCH / INCOMING",
           "title": "Friday. 8:42 p.m.",
-          "body": "Rain rattles the street grates above a packed Manhattan platform. A commuter uploads a photograph: a glowing box beside a column. Its screen reads, “LOST SOMETHING? FIND IT HERE.”\n\nA second photograph arrives. Different station. Same message.\n\nYou are the NYPD intelligence analyst on the evening shift. Your partner on the ground, Detective Elena Rivera, opens the radio channel.\n\n“Command. People are stopping to look. Tell me what we actually know.”\n\nThis is a fictional incident with fictional station layouts and records. You analyze evidence; the field team manages safety under its procedures.",
+          "body": "8:42 p.m. A glowing box appears on a packed subway platform. Then another, at a different station.\n\nYou are the NYPD analyst at transit command. Detective Rivera is on the ground.\n\n“People are following its messages. I need your eyes on this.”\n\nA commuter, Nina, is calling about her brother. A camera clip is ready. Which do you open first?\n\nFictional incident. You analyze evidence; responders manage physical safety.",
           "question": "",
           "evidence": [],
           "choices": [],
@@ -27,13 +27,144 @@
           "artCaption": "Enter the incident with questions, not assumptions.",
           "learningObjective": "Understand your role: use AI to organize information, then verify its claims.",
           "artFocusX": 0.75,
-          "simpleExplanation": ""
+          "simpleExplanation": "",
+          "nextBeatId": "first_lead"
+        },
+        {
+          "id": "first_lead",
+          "speaker": "DISPATCH / INCOMING",
+          "title": "Two leads. Your call.",
+          "body": "Rivera needs your first update. Pick a lead to establish what happened. Both will become available during the investigation.",
+          "question": "Where do you begin?",
+          "evidence": [],
+          "choices": [
+            {
+              "text": "Review the platform camera.",
+              "supported": true,
+              "response": "You bring the placement footage into focus.",
+              "consequence": "Rivera hears the observation before the witness account.",
+              "nextBeatId": "camera_lead"
+            },
+            {
+              "text": "Take Nina’s call.",
+              "supported": true,
+              "response": "Nina tells you why she called.",
+              "consequence": "You learn about Leo before reviewing the object.",
+              "nextBeatId": "witness_lead"
+            }
+          ],
+          "concept": "Investigation / evidence selection",
+          "lesson": "Different sources answer different questions.",
+          "artResource": "StoryArt/platform",
+          "artCaption": "Two leads. Your call.",
+          "learningObjective": "Choose evidence that can answer a concrete question.",
+          "artFocusX": 0.75,
+          "simpleExplanation": "A camera can show visible actions. A witness can explain what happened outside its view. Neither is a complete account by itself.",
+          "nextBeatId": "",
+          "interaction": "lead"
+        },
+        {
+          "id": "camera_lead",
+          "speaker": "DISPATCH / INCOMING",
+          "title": "Start with what is visible.",
+          "body": "A person leaves a box beside a column. Two people nearby leave in the same direction.\n\nRIVERA: “I can work with that. Do we know what is inside?”\n\nYou do not. Then Nina’s call comes through: her brother Leo followed a prize message and is not answering.",
+          "question": "",
+          "evidence": [],
+          "choices": [],
+          "concept": "",
+          "lesson": "",
+          "artResource": "StoryArt/platform",
+          "artCaption": "Start with what is visible.",
+          "learningObjective": "Separate a visible action from an explanation of it.",
+          "artFocusX": 0.75,
+          "simpleExplanation": "",
+          "nextBeatId": "timeline"
+        },
+        {
+          "id": "witness_lead",
+          "speaker": "DISPATCH / INCOMING",
+          "title": "“He said he would be back.”",
+          "body": "NINA: “Leo scanned it. It said he could collect a headset. He went down the stairs. He isn’t answering.”\n\nYou ask what she actually saw. No one forced him to leave.\n\nThe camera desk sends the placement clip. Three people leave near the box; its contents are not visible.",
+          "question": "",
+          "evidence": [],
+          "choices": [],
+          "concept": "",
+          "lesson": "",
+          "artResource": "StoryArt/platform",
+          "artCaption": "“He said he would be back.”",
+          "learningObjective": "Ask what a witness observed rather than filling in the gaps.",
+          "artFocusX": 0.75,
+          "simpleExplanation": "",
+          "nextBeatId": "timeline"
+        },
+        {
+          "id": "timeline",
+          "speaker": "RIVERA / PLATFORM",
+          "title": "Put the night in order.",
+          "body": "Three records arrive with conflicting clocks. Tap the event cards in the order they actually happened. You can undo before submitting.",
+          "question": "What happened first, second, and third?",
+          "evidence": [
+            {
+              "id": "timeline_clock",
+              "title": "Clock maintenance note",
+              "source": "MTA maintenance / tonight",
+              "text": "Camera 18 is six minutes behind the synchronized station clock. Other records below use synchronized time."
+            }
+          ],
+          "choices": [
+            {
+              "text": "Timeline assembled with the documented clock correction.",
+              "supported": true,
+              "response": "PRIYA: “Placement at 20:41, Leo at 20:45, candidate at 20:48. Now we have a sequence we can use.”",
+              "consequence": "The apparent time conflict is resolved."
+            },
+            {
+              "text": "Timeline submitted with an incorrect event order.",
+              "supported": false,
+              "response": "PRIYA: “There is a clock offset in the record. Let’s reconstruct this before relying on it.”",
+              "consequence": "The team corrects the sequence: placement 20:41, Leo 20:45, candidate 20:48."
+            }
+          ],
+          "concept": "Data quality / timeline reconstruction",
+          "lesson": "Preserve original times and apply only documented corrections.",
+          "artResource": "StoryArt/face",
+          "artCaption": "A timeline built from originals.",
+          "learningObjective": "Correct a documented clock offset before interpreting event order.",
+          "artFocusX": 0.5,
+          "simpleExplanation": "If your watch runs slow, a diary made from it shifts every event. An AI can sort those times correctly and still tell the wrong story. First account for the known clock error.",
+          "interaction": "timeline",
+          "nextBeatId": "claim",
+          "timelineItems": [
+            {
+              "id": "leo_enters",
+              "title": "Leo enters the concourse",
+              "source": "Camera 18",
+              "text": "Displayed time 20:39. This camera is six minutes slow."
+            },
+            {
+              "id": "candidate_enters",
+              "title": "A candidate commuter enters the station",
+              "source": "Synchronized entrance camera",
+              "text": "20:48. A person wearing a similar jacket enters."
+            },
+            {
+              "id": "object_placed",
+              "title": "The object is placed beside the column",
+              "source": "Synchronized platform camera",
+              "text": "20:41. The contents remain unknown."
+            }
+          ],
+          "correctOrder": [
+            "object_placed",
+            "leo_enters",
+            "candidate_enters"
+          ]
         },
         {
           "id": "claim",
           "speaker": "RIVERA / PLATFORM",
           "title": "The machine is already certain.",
-          "body": "Your AI assistant, Signal, compresses the first reports into a single alert. Rivera is waiting for your briefing.",
+          "body": "Signal turns the scene into an alert: “Three gang members planted an explosive device.”\n\nRivera asks for your briefing. The box’s contents have not been established.",
           "question": "What can you report from this evidence?",
           "evidence": [
             {
@@ -51,16 +182,18 @@
           ],
           "choices": [
             {
-              "text": "Report a confirmed explosive device and three identified gang members.",
+              "text": "Relay Signal’s alert as confirmed.",
               "supported": false,
-              "response": "RIVERA: “Who confirmed the contents? I need the original report.” You have none. Priya at command issues a correction before the claim travels further.",
-              "consequence": "Your unsupported alert creates a correction task; the team now asks for sources with every claim."
+              "response": "RIVERA: “Received. Who established the contents?” Your briefing now contains a claim the source does not support.",
+              "consequence": "Your next task is to repair the briefing and recover Nina’s interrupted call.",
+              "nextBeatId": "repair_call"
             },
             {
-              "text": "Report deliberate placement; contents and identities remain unconfirmed.",
+              "text": "Relay the placement; leave contents unconfirmed.",
               "supported": true,
-              "response": "RIVERA: “Copy. Keeping people clear under our procedures. Send the original footage.”",
-              "consequence": "The team receives a usable observation without an invented identification."
+              "response": "RIVERA: “Clear. Keep the contents open. I have another witness for you.”",
+              "consequence": "The briefing stays usable and Nina’s call continues.",
+              "nextBeatId": "lure"
             }
           ],
           "concept": "AI basics / hallucination",
@@ -72,48 +205,27 @@
           "simpleExplanation": "Think of Signal as a fast writer, not an eyewitness. It can turn a few observations into a convincing story, filling gaps with details that sound likely. The camera showed a box being placed; Signal added what was inside. That extra detail still needs evidence."
         },
         {
-          "id": "frame",
-          "speaker": "PRIYA / COMMAND",
-          "title": "Ask for something you can check.",
-          "body": "Signal offers to “solve the incident.” You need a useful next analysis, not another confident story.",
-          "question": "What task do you give Signal?",
-          "evidence": [
-            {
-              "id": "inputs",
-              "title": "Available inputs",
-              "source": "Command intake · 20:44",
-              "text": "You have two commuter photographs, one short camera excerpt, and no verified identification or object inspection. Originals are retained with timestamps."
-            }
-          ],
-          "choices": [
-            {
-              "text": "List observations with their source and timestamp; separate hypotheses and missing information.",
-              "supported": true,
-              "response": "PRIYA: “Now we can check each line against the originals. I will verify the timestamps.”",
-              "consequence": "A traceable working timeline opens on your evidence desk."
-            },
-            {
-              "text": "Name the gang and explain its motive from the photographs.",
-              "supported": false,
-              "response": "PRIYA: “That asks it to invent the part we do not know. I am replacing this with an observations-only request.”",
-              "consequence": "A colleague repairs the request. The investigation continues with a documented evidence gap."
-            }
-          ],
-          "concept": "Framing an AI task",
-          "lesson": "Useful requests specify the job, available evidence, output format, and what to do when information is missing. A better request helps verification; it does not guarantee accuracy.",
-          "afterError": "PRIYA: “We corrected the first alert. Let’s make the next request narrower.”",
-          "afterSuccess": "PRIYA: “Good distinction on that first alert. Let’s keep the analysis traceable.”",
+          "id": "repair_call",
+          "speaker": "DISPATCH / INCOMING",
+          "title": "Nina has gone quiet.",
+          "body": "Priya pauses the briefing until you supply a contents source. You cannot.\n\nWhile you untangle the alert, Nina’s call drops. You ask dispatch to reconnect her.\n\nWhen she returns: “Please listen. His last message said five minutes.”\n\nYou correct the unsupported claim and return to her account.",
+          "question": "",
+          "evidence": [],
+          "choices": [],
+          "concept": "",
+          "lesson": "",
           "artResource": "StoryArt/platform",
-          "artCaption": "At command, the next question matters.",
-          "learningObjective": "Frame a bounded AI task with traceable sources and explicit unknowns.",
+          "artCaption": "Nina has gone quiet.",
+          "learningObjective": "Recover from an unsupported claim by correcting the record explicitly.",
           "artFocusX": 0.75,
-          "simpleExplanation": "Imagine asking a helper to sort a messy desk. “Solve everything” gives them little guidance. “Put each note beside its source and mark what is missing” gives you something you can inspect. Clear AI requests work the same way: define the task and how to handle gaps."
+          "simpleExplanation": "",
+          "nextBeatId": "lure"
         },
         {
           "id": "lure",
           "speaker": "NINA PARK / WITNESS",
           "title": "He followed the arrow.",
-          "body": "A voice message comes in, breathless beneath the sound of a departing train.\n\n“My brother Leo scanned it. It said he had won something. He went to collect it. He’s sixteen. He isn’t answering.”",
+          "body": "Nina sends the last message from Leo. Rivera needs a usable welfare update, not another theory.",
           "question": "How should the briefing describe Leo’s situation?",
           "evidence": [
             {
@@ -131,13 +243,13 @@
           ],
           "choices": [
             {
-              "text": "A gang has abducted Leo; the message proves it.",
+              "text": "Report an abduction based on the messages.",
               "supported": false,
               "response": "RIVERA: “We are treating his welfare seriously. But that message does not establish an abduction. Send his last verified location.”",
               "consequence": "The team must separate the urgent welfare concern from your unsupported account."
             },
             {
-              "text": "Leo followed an unverified offer and is now uncontactable; share his last verified location.",
+              "text": "Report the unverified offer and last known location.",
               "supported": true,
               "response": "RIVERA: “Received. We will follow up on his welfare. Keep that message preserved.”",
               "consequence": "Nina knows her report is being acted on without changing what she actually witnessed."
@@ -149,13 +261,14 @@
           "artCaption": "A phone message. A brother out of sight.",
           "learningObjective": "Communicate uncertainty without dismissing an urgent concern.",
           "artFocusX": 0.75,
-          "simpleExplanation": "A weather report can say rain is possible without claiming a storm has already happened. You can take Leo’s situation seriously while keeping the explanation open. Good AI-assisted reporting keeps the concern, the observations, and the unknowns separate."
+          "simpleExplanation": "A weather report can say rain is possible without claiming a storm has already happened. You can take Leo’s situation seriously while keeping the explanation open. Good AI-assisted reporting keeps the concern, the observations, and the unknowns separate.",
+          "nextBeatId": "cliff01"
         },
         {
           "id": "cliff01",
           "speaker": "CAMERA DESK / 20:49",
           "title": "The empty corridor.",
-          "body": "The next camera shows Leo entering the east concourse. Its clock reads 20:39—six minutes before his message.\n\nRivera: “Either that camera is wrong, or we’re following the wrong boy.”\n\nAn incoming AI match flashes on your console: SUSPECT FOUND.",
+          "body": "Leo’s corrected last sighting is on the board. Then a second feed appears.\n\nSignal flashes a candidate match: 96.\n\nRIVERA: “Is this our person—or are we about to make a stranger part of this story?”",
           "question": "",
           "evidence": [],
           "choices": [],
@@ -165,7 +278,8 @@
           "artCaption": "Two clocks. One missing stretch of time.",
           "learningObjective": "Notice when conflicting inputs require investigation before analysis.",
           "artFocusX": 0.75,
-          "simpleExplanation": ""
+          "simpleExplanation": "",
+          "nextBeatId": ""
         }
       ]
     },

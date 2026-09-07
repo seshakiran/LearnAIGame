@@ -22,6 +22,9 @@ namespace LearnAIGame.Story
         public string id, speaker, title, body, question, concept, lesson;
         public string afterError, afterSuccess;
         public string artResource, artCaption, learningObjective, simpleExplanation;
+        public string interaction, nextBeatId;
+        public StoryEvidence[] timelineItems;
+        public string[] correctOrder;
         public float artFocusX = .5f;
         public bool assessment;
         public StoryEvidence[] evidence;
@@ -35,7 +38,7 @@ namespace LearnAIGame.Story
 
     [Serializable] public class StoryChoice
     {
-        public string text, response, consequence;
+        public string text, response, consequence, nextBeatId;
         public bool supported;
     }
 
@@ -43,6 +46,7 @@ namespace LearnAIGame.Story
     {
         public string beatId;
         public int choice;
+        public string[] order;
     }
 
     [Serializable] public class StorySave
@@ -52,6 +56,8 @@ namespace LearnAIGame.Story
         public bool completed;
         public List<StoryDecision> decisions = new List<StoryDecision>();
         public List<string> inspected = new List<string>();
+        public string draftBeatId;
+        public List<string> draftOrder = new List<string>();
 
         public StoryDecision Find(string id) => decisions.Find(d => d.beatId == id);
     }

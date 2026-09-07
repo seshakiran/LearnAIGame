@@ -31,13 +31,35 @@ def validate(path):
                 decisions += 1
                 assert beat['question'] and beat['concept'] and beat['lesson']
                 assert beat.get('simpleExplanation'), f"Missing plain-language explanation: {beat['id']}"
-                assert beat['evidence'], f"Decision lacks evidence: {beat['id']}"
+                assert beat['evidence'] or beat.get('interaction') == 'lead', f"Decision lacks evidence: {beat['id']}"
                 assert len(beat['choices']) >= 2
-                assert sum(c['supported'] for c in beat['choices']) == 1
+                assert sum(c['supported'] for c in beat['choices']) == (len(beat['choices']) if beat.get('interaction') == 'lead' else 1)
                 for choice in beat['choices']:
                     assert all(choice.get(k) for k in ['text', 'response', 'consequence'])
                 if beat.get('assessment'):
                     assessment.append(beat)
+    # Walk all authored branches, fail on cycles, dangling targets, unreachable beats.
+    for chapter in data['chapters']:
+        beats = chapter['beats']
+        index = {b['id']: i for i, b in enumerate(beats)}
+        visited = set()
+        def walk(i, path):
+            if i >= len(beats):
+                return
+            assert i not in path, f"Cycle in {chapter['id']}"
+            visited.add(i)
+            b = beats[i]
+            if b.get('interaction') == 'timeline':
+                items = [e['id'] for e in b['timelineItems']]
+                assert len(items) == len(set(items))
+                assert sorted(items) == sorted(b['correctOrder'])
+                assert b['choices'][0]['supported'] and not b['choices'][1]['supported']
+            for c in b['choices'] or [{}]:
+                target = c.get('nextBeatId') or b.get('nextBeatId')
+                assert not target or target in index, f"Missing branch {target}"
+                walk(index[target] if target else i + 1, path | {i})
+        walk(0, set())
+        assert len(visited) == len(beats), f"Unreachable scene in {chapter['id']}"
     # The first campaign's final briefing promises exactly three held-feedback calls.
     assert len(assessment) == 3
     endings = set()
