@@ -27,8 +27,7 @@ namespace LearnAIGame.Story
         {
             canvas = UIFactory.CreateRootCanvas();
             var scaler = canvas.GetComponent<CanvasScaler>();
-            scaler.referenceResolution = new Vector2(900, 1500);
-            scaler.matchWidthOrHeight = 0;
+            scaler.uiScaleMode = CanvasScaler.ScaleMode.ConstantPixelSize;
             var asset = Resources.Load<TextAsset>("last_train");
             if (asset == null)
             {
@@ -54,9 +53,10 @@ namespace LearnAIGame.Story
             safe.anchorMin = new Vector2(r.xMin / Screen.width, r.yMin / Screen.height);
             safe.anchorMax = new Vector2(r.xMax / Screen.width, r.yMax / Screen.height);
             safe.offsetMin = safe.offsetMax = Vector2.zero;
+            safe.gameObject.AddComponent<StoryResponsiveLayout>();
             var viewport = UIFactory.CreateFullScreenPanel(safe, GamePalette.BackgroundDeep, "Viewport");
-            viewport.offsetMin = new Vector2(36, 24);
-            viewport.offsetMax = new Vector2(-36, -24);
+            viewport.offsetMin = new Vector2(16, 12);
+            viewport.offsetMax = new Vector2(-16, -12);
             viewport.gameObject.AddComponent<RectMask2D>();
             var scroll = viewport.gameObject.AddComponent<ScrollRect>();
             scroll.horizontal = false;
@@ -67,7 +67,7 @@ namespace LearnAIGame.Story
             stack.anchorMin = new Vector2(0, 1); stack.anchorMax = Vector2.one;
             stack.pivot = new Vector2(.5f, 1); stack.sizeDelta = Vector2.zero;
             var layout = stack.GetComponent<VerticalLayoutGroup>();
-            layout.spacing = 20; layout.padding = new RectOffset(4, 4, 20, 40);
+            layout.spacing = 12; layout.padding = new RectOffset(0, 0, 10, 24);
             layout.childControlHeight = layout.childControlWidth = true;
             layout.childForceExpandHeight = false; layout.childForceExpandWidth = true;
             stack.GetComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
@@ -81,7 +81,8 @@ namespace LearnAIGame.Story
             var go = new GameObject("Text", typeof(RectTransform), typeof(Text));
             go.transform.SetParent(parent ?? stack, false);
             var text = go.GetComponent<Text>();
-            text.font = UIFactory.GetPlayfulFont(); text.fontSize = size;
+            text.font = UIFactory.GetPlayfulFont(); text.fontSize = Mathf.Max(13, Mathf.RoundToInt(size / 1.65f));
+            text.lineSpacing = 1.15f;
             text.fontStyle = bold ? FontStyle.Bold : FontStyle.Normal;
             text.color = color ?? ink; text.text = value;
             text.supportRichText = false; text.raycastTarget = false;
@@ -97,7 +98,7 @@ namespace LearnAIGame.Story
             var image = go.GetComponent<Image>(); image.color = color ?? GamePalette.CardSurface;
             image.sprite = UIFactory.GetRoundedSprite(20); image.type = Image.Type.Sliced;
             var layout = go.GetComponent<VerticalLayoutGroup>();
-            layout.padding = new RectOffset(26, 26, 24, 24); layout.spacing = 14;
+            layout.padding = new RectOffset(16, 16, 14, 14); layout.spacing = 9;
             layout.childControlWidth = layout.childControlHeight = true;
             layout.childForceExpandHeight = false;
             return go.GetComponent<RectTransform>();
@@ -108,6 +109,7 @@ namespace LearnAIGame.Story
             var root = Card(primary ? accent : GamePalette.ChipSurface);
             var label = Label(text, 28, primary ? GamePalette.TextDark : ink, true, root);
             var b = root.gameObject.AddComponent<Button>();
+            root.gameObject.AddComponent<LayoutElement>().minHeight = 48;
             b.targetGraphic = root.GetComponent<Image>(); b.interactable = enabled;
             if (!enabled) label.color = mutedInk;
             b.onClick.AddListener(() => action());
@@ -118,12 +120,17 @@ namespace LearnAIGame.Story
             var texture = Resources.Load<Texture2D>(beat.artResource);
             if (texture == null) return;
             var root = Card();
-            root.GetComponent<VerticalLayoutGroup>().padding = new RectOffset(0, 0, 0, 20);
-            var go = new GameObject("Story illustration", typeof(RectTransform), typeof(LayoutElement), typeof(RawImage));
-            go.transform.SetParent(root, false);
-            go.GetComponent<LayoutElement>().preferredHeight = 480;
+            root.GetComponent<VerticalLayoutGroup>().padding = new RectOffset(12, 12, 12, 12);
+            var frame = new GameObject("Scene frame", typeof(RectTransform), typeof(LayoutElement));
+            frame.transform.SetParent(root, false);
+            frame.GetComponent<LayoutElement>().preferredHeight = 200;
+            var go = new GameObject("Story illustration", typeof(RectTransform), typeof(RawImage), typeof(AspectRatioFitter));
+            go.transform.SetParent(frame.transform, false);
             go.GetComponent<RawImage>().texture = texture;
             go.GetComponent<RawImage>().raycastTarget = false;
+            var fitter = go.GetComponent<AspectRatioFitter>();
+            fitter.aspectMode = AspectRatioFitter.AspectMode.FitInParent;
+            fitter.aspectRatio = (float)texture.width / texture.height;
             go.AddComponent<StoryArtwork>();
             Label("  ILLUSTRATED SCENE / NOT AN EVIDENCE RECORD", 19, accent, parent: root);
             Label("  " + beat.artCaption, 25, ink, parent: root);
@@ -156,7 +163,7 @@ namespace LearnAIGame.Story
             stack.parent.GetComponent<Image>().color = new Color(0.02f, 0.04f, 0.07f, .65f);
             var space = new GameObject("Scene breathing room", typeof(RectTransform), typeof(LayoutElement));
             space.transform.SetParent(stack, false);
-            space.GetComponent<LayoutElement>().preferredHeight = 300;
+            space.GetComponent<LayoutElement>().preferredHeight = 180;
             var caption = Card(); Label(beat.artCaption, 30, ink, parent: caption);
             LearningGoal(beat);
             Button("Return to comic view", back, true);
@@ -284,8 +291,11 @@ namespace LearnAIGame.Story
                 var card = Card();
                 Label("WHAT CHANGED", 20, accent, true, card);
                 Label(choice.consequence, 26, ink, parent: card);
-                Label(beat.concept, 24, GamePalette.Blue, true);
-                Label(beat.lesson, 28);
+                var explanation = Card();
+                Label("WHY THIS MATTERS", 20, GamePalette.Blue, true, explanation);
+                Label(beat.simpleExplanation, 28, ink, parent: explanation);
+                Label("TAKE IT WITH YOU", 20, accent, true, explanation);
+                Label(beat.lesson, 25, mutedInk, parent: explanation);
                 if (!choice.supported)
                 {
                     foreach (var option in beat.choices)
@@ -362,7 +372,8 @@ namespace LearnAIGame.Story
                     Label(beat.title, 29, ink, true, card);
                     Label("YOUR CALL / " + beat.choices[d.choice].text, 25, mutedInk, parent: card);
                     Label(beat.choices[d.choice].response, 26, accent, parent: card);
-                    Label(beat.lesson, 26, ink, parent: card);
+                    Label(beat.simpleExplanation, 26, ink, parent: card);
+                    Label(beat.lesson, 24, mutedInk, parent: card);
                 }
             Label("TAKE IT OUTSIDE THE GAME", 21, accent, true);
             Label("When an AI gives you a confident claim, open the source and check that exact claim before passing it on. When it proposes an action, check who authorized it.", 29);

@@ -18,7 +18,7 @@ namespace LearnAIGame.Story
         {
             picture = GetComponent<RawImage>();
             rect = GetComponent<RectTransform>();
-            layout = GetComponent<LayoutElement>();
+            layout = GetComponentInParent<LayoutElement>();
         }
 
         private void LateUpdate()
@@ -27,7 +27,8 @@ namespace LearnAIGame.Story
             float aspect = (float)picture.texture.width / picture.texture.height;
             if (!fullScreen && layout != null)
             {
-                float height = rect.rect.width / aspect;
+                float width = ((RectTransform)layout.transform).rect.width;
+                float height = Mathf.Clamp(width / aspect, 140, 240);
                 if (Mathf.Abs(layout.preferredHeight - height) > .5f) layout.preferredHeight = height;
                 picture.uvRect = new Rect(0, 0, 1, 1);
             }

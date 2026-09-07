@@ -55,3 +55,13 @@ Advanced episodes need richer interactions and authored rubric-based explanation
 ## Illustrated presentation
 
 The campaign now includes six graphic-novel chapter keyframes, individual scene captions and explicit learning goals on all 25 story beats. Comic panels preserve the complete image; an optional full-screen illustration view uses focal-point cropping. See `STORY_ART.md` for artwork prompts, layout reasoning, and the comparison mockup.
+
+## Devices and reading layout
+
+Primary target: iPhone and Android phones in portrait. Design targets include 320×568, 360×800, 390×844, and 430×932 logical viewports, with notches and system-bar safe areas. Secondary: tablets with a centered reading column. Later delivery: web with the same bounded column in a resizable browser canvas. No mobile or WebGL release build is claimed by this change.
+
+The old 900-unit width scaling was replaced with density-normalized reading units. Body copy is approximately 17 units, headings 33, metadata no smaller than 13, touch buttons at least 48 high, and content is capped at 680 wide. Illustrations preserve their aspect inside a 140–240-high frame. Layout responds to window and safe-area changes without restarting the scene. Unknown phone DPI falls back to a 390-wide reference; device testing should verify unusually reported DPI values. Editor preview starts at 390×844; iOS/Android orientation is portrait.
+
+Every coached decision now has a short `simpleExplanation`: a familiar analogy, the case connection, and a practical check. Player-facing labels are “Why this matters” and “Take it with you.” These explanations are hidden for final assessment decisions until the ending. Narrative-only beats retain their learning objective and avoid interrupting the story with an extra lesson.
+
+Runtime QA remains pending: check the target phone sizes, tablet, and browser resize; inspect long evidence and choices; test expanded art and the return button; verify safe areas and touch scrolling. Direct C# compilation and content checks do not replace device playtesting.

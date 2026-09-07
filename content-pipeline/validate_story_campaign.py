@@ -30,6 +30,7 @@ def validate(path):
             if beat['choices']:
                 decisions += 1
                 assert beat['question'] and beat['concept'] and beat['lesson']
+                assert beat.get('simpleExplanation'), f"Missing plain-language explanation: {beat['id']}"
                 assert beat['evidence'], f"Decision lacks evidence: {beat['id']}"
                 assert len(beat['choices']) >= 2
                 assert sum(c['supported'] for c in beat['choices']) == 1

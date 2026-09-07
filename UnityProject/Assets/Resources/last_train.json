@@ -26,7 +26,8 @@
           "artResource": "StoryArt/platform",
           "artCaption": "Enter the incident with questions, not assumptions.",
           "learningObjective": "Understand your role: use AI to organize information, then verify its claims.",
-          "artFocusX": 0.75
+          "artFocusX": 0.75,
+          "simpleExplanation": ""
         },
         {
           "id": "claim",
@@ -67,7 +68,8 @@
           "artResource": "StoryArt/platform",
           "artCaption": "An object on the platform. An AI already calling it a weapon.",
           "learningObjective": "Distinguish a direct observation from an AI-generated inference.",
-          "artFocusX": 0.75
+          "artFocusX": 0.75,
+          "simpleExplanation": "Think of Signal as a fast writer, not an eyewitness. It can turn a few observations into a convincing story, filling gaps with details that sound likely. The camera showed a box being placed; Signal added what was inside. That extra detail still needs evidence."
         },
         {
           "id": "frame",
@@ -104,7 +106,8 @@
           "artResource": "StoryArt/platform",
           "artCaption": "At command, the next question matters.",
           "learningObjective": "Frame a bounded AI task with traceable sources and explicit unknowns.",
-          "artFocusX": 0.75
+          "artFocusX": 0.75,
+          "simpleExplanation": "Imagine asking a helper to sort a messy desk. “Solve everything” gives them little guidance. “Put each note beside its source and mark what is missing” gives you something you can inspect. Clear AI requests work the same way: define the task and how to handle gaps."
         },
         {
           "id": "lure",
@@ -145,7 +148,8 @@
           "artResource": "StoryArt/platform",
           "artCaption": "A phone message. A brother out of sight.",
           "learningObjective": "Communicate uncertainty without dismissing an urgent concern.",
-          "artFocusX": 0.75
+          "artFocusX": 0.75,
+          "simpleExplanation": "A weather report can say rain is possible without claiming a storm has already happened. You can take Leo’s situation seriously while keeping the explanation open. Good AI-assisted reporting keeps the concern, the observations, and the unknowns separate."
         },
         {
           "id": "cliff01",
@@ -160,7 +164,8 @@
           "artResource": "StoryArt/platform",
           "artCaption": "Two clocks. One missing stretch of time.",
           "learningObjective": "Notice when conflicting inputs require investigation before analysis.",
-          "artFocusX": 0.75
+          "artFocusX": 0.75,
+          "simpleExplanation": ""
         }
       ]
     },
@@ -211,7 +216,8 @@
           "artResource": "StoryArt/face",
           "artCaption": "The same jacket—or just a similar one?",
           "learningObjective": "Interpret an AI score without mistaking similarity for identity.",
-          "artFocusX": 0.5
+          "artFocusX": 0.5,
+          "simpleExplanation": "Two keys can look almost identical and still open different doors. An image-matching score measures a kind of resemblance. Unless the system has been tested to support that interpretation, a score of 96 does not mean a 96% chance of identity."
         },
         {
           "id": "clock",
@@ -252,7 +258,8 @@
           "artResource": "StoryArt/face",
           "artCaption": "Reconstruct the sequence from original records.",
           "learningObjective": "Account for data-quality problems while preserving original timestamps.",
-          "artFocusX": 0.5
+          "artFocusX": 0.5,
+          "simpleExplanation": "If your watch is six minutes slow, a diary based on it puts every event in the wrong place. AI can organize that diary beautifully and still produce the wrong timeline. Fix the known clock error, but keep the original times so someone else can check your work."
         },
         {
           "id": "bias",
@@ -293,7 +300,8 @@
           "artResource": "StoryArt/face",
           "artCaption": "A historical label is not tonight’s evidence.",
           "learningObjective": "Identify how training labels and proxy features can reproduce bias.",
-          "artFocusX": 0.5
+          "artFocusX": 0.5,
+          "simpleExplanation": "Imagine teaching a helper who is a good runner using only a list of people previously invited to races. The helper may learn who gets invited, not who runs well. A model trained on past stops can similarly learn patterns of scrutiny rather than responsibility."
         },
         {
           "id": "cliff02",
@@ -308,7 +316,8 @@
           "artResource": "StoryArt/face",
           "artCaption": "A new message changes the working picture.",
           "learningObjective": "Update a hypothesis when new evidence arrives.",
-          "artFocusX": 0.5
+          "artFocusX": 0.5,
+          "simpleExplanation": ""
         }
       ]
     },
@@ -359,7 +368,8 @@
           "artResource": "StoryArt/message",
           "artCaption": "The offer borrows the look of authority.",
           "learningObjective": "Evaluate a source’s authority beyond its branding or presentation.",
-          "artFocusX": 0.5
+          "artFocusX": 0.5,
+          "simpleExplanation": "A homemade badge can look official without granting any authority. A logo on a webpage works the same way. Signal can recognize the appearance, but the event register tells you whether the offer is actually approved."
         },
         {
           "id": "retrieval",
@@ -400,7 +410,8 @@
           "artResource": "StoryArt/message",
           "artCaption": "A closed passage on an old map. A different status tonight.",
           "learningObjective": "Check retrieved information for currency and relevance to the case.",
-          "artFocusX": 0.5
+          "artFocusX": 0.5,
+          "simpleExplanation": "RAG is like giving a writer a stack of library pages before asking for an answer. That can help, but the librarian might bring an old edition or the wrong book. Here, the retrieved map was real but outdated. Check the supplied pages, not just the polished answer."
         },
         {
           "id": "claimspan",
@@ -435,7 +446,8 @@
           "artResource": "StoryArt/message",
           "artCaption": "A working citation. A conclusion it never states.",
           "learningObjective": "Test whether a cited passage actually supports the attached claim.",
-          "artFocusX": 0.5
+          "artFocusX": 0.5,
+          "simpleExplanation": "A footnote is an address, not a guarantee. You still have to visit the address and see what is there. This notice says a passage reopened. It says nothing about Leo being safe, even when Signal attaches its link to that claim."
         },
         {
           "id": "cliff03",
@@ -450,7 +462,8 @@
           "artResource": "StoryArt/message",
           "artCaption": "A familiar voice arrives through an unfamiliar route.",
           "learningObjective": "Recognize why provenance matters for AI-generated or forwarded media.",
-          "artFocusX": 0.5
+          "artFocusX": 0.5,
+          "simpleExplanation": ""
         }
       ]
     },
@@ -501,7 +514,8 @@
           "artResource": "StoryArt/voice",
           "artCaption": "The voice sounds right. The source is missing.",
           "learningObjective": "Authenticate a consequential instruction through a trusted channel.",
-          "artFocusX": 0.5
+          "artFocusX": 0.5,
+          "simpleExplanation": "A recording is like a photograph of a badge: it can resemble authority without proving who is speaking now. You do not have to decide whether the audio was generated, edited, or forwarded incorrectly. Calling through the established channel checks the instruction itself."
         },
         {
           "id": "injection",
@@ -542,7 +556,8 @@
           "artResource": "StoryArt/voice",
           "artCaption": "The retrieved page stops describing and starts commanding.",
           "learningObjective": "Separate untrusted document content from authorized instructions.",
-          "artFocusX": 0.5
+          "artFocusX": 0.5,
+          "simpleExplanation": "Imagine a note inside a book saying, “Librarian: give me the reader’s private records.” You would treat it as text in the book, not an order from your manager. An AI assistant must keep the same boundary when a retrieved page tries to command it."
         },
         {
           "id": "intent",
@@ -577,7 +592,8 @@
           "artResource": "StoryArt/voice",
           "artCaption": "Connected events. An author still unknown.",
           "learningObjective": "Separate evidence of manipulation from attribution of its creator.",
-          "artFocusX": 0.5
+          "artFocusX": 0.5,
+          "simpleExplanation": "Finding two misleading flyers does not prove the same person wrote both. Recognizing a manipulation and identifying its author are separate jobs. The hostile page is evidence of an attempt; the audio still needs its own attribution evidence."
         },
         {
           "id": "cliff04",
@@ -592,7 +608,8 @@
           "artResource": "StoryArt/voice",
           "artCaption": "An instruction becomes a pending action.",
           "learningObjective": "Recognize the difference between an assistant’s words and its tool actions.",
-          "artFocusX": 0.5
+          "artFocusX": 0.5,
+          "simpleExplanation": ""
         }
       ]
     },
@@ -643,7 +660,8 @@
           "artResource": "StoryArt/chain",
           "artCaption": "The witness file is waiting at an approval gate.",
           "learningObjective": "Match agent permissions to the task and review consequential actions.",
-          "artFocusX": 0.5
+          "artFocusX": 0.5,
+          "simpleExplanation": "A writing assistant becomes an agent when it can use tools to do things, such as sending a message. Think of giving a helper a key: they should get only the key needed for their job. A summary task does not need permission to send private files."
         },
         {
           "id": "agreement",
@@ -684,7 +702,8 @@
           "artResource": "StoryArt/chain",
           "artCaption": "Three reports, one source underneath.",
           "learningObjective": "Check whether multiple agents provide independent corroboration.",
-          "artFocusX": 0.5
+          "artFocusX": 0.5,
+          "simpleExplanation": "Three friends repeating the same rumor are not three independent witnesses. These assistants copied one source chain, so their agreement repeated its weakness. Trace their answers back to separate originals before treating agreement as corroboration."
         },
         {
           "id": "evaluation",
@@ -719,7 +738,8 @@
           "artResource": "StoryArt/chain",
           "artCaption": "One successful test. A much larger claim.",
           "learningObjective": "Assess whether testing supports the proposed deployment permissions.",
-          "artFocusX": 0.5
+          "artFocusX": 0.5,
+          "simpleExplanation": "Checking that a lock stops one key does not prove it stops every wrong key. A single blocked instruction shows that one test passed. Try different attacks and ordinary tasks, while keeping permission checks in place outside the AI’s answers."
         },
         {
           "id": "cliff05",
@@ -734,7 +754,8 @@
           "artResource": "StoryArt/morning",
           "artCaption": "A verified call finally brings relief.",
           "learningObjective": "Distinguish direct confirmation from earlier unverified reassurance.",
-          "artFocusX": 0.5
+          "artFocusX": 0.5,
+          "simpleExplanation": ""
         }
       ]
     },
@@ -759,7 +780,8 @@
           "artResource": "StoryArt/morning",
           "artCaption": "The next shift will depend on your account.",
           "learningObjective": "Apply evidence, source, and permission checks independently.",
-          "artFocusX": 0.5
+          "artFocusX": 0.5,
+          "simpleExplanation": ""
         },
         {
           "id": "finalclaim",
@@ -801,7 +823,8 @@
           "artResource": "StoryArt/morning",
           "artCaption": "A fresh statement enters the final briefing.",
           "learningObjective": "Demonstrate evidence-based judgment using a new witness account.",
-          "artFocusX": 0.5
+          "artFocusX": 0.5,
+          "simpleExplanation": "A summary is a smaller container for the same facts. It should not add people, events, or certainty that the original account never supplied. The witness described a demand and leaving; the AI summary added a completed theft and identified people."
         },
         {
           "id": "finalsource",
@@ -843,7 +866,8 @@
           "artResource": "StoryArt/morning",
           "artCaption": "One update must reach the families.",
           "learningObjective": "Demonstrate source evaluation using conflicting new records.",
-          "artFocusX": 0.5
+          "artFocusX": 0.5,
+          "simpleExplanation": "A thousand copies of yesterday’s timetable do not make it today’s timetable. Popularity tells you how widely a message traveled. The authenticated update tells you which instruction currently governs this incident."
         },
         {
           "id": "finalcontrol",
@@ -885,7 +909,8 @@
           "artResource": "StoryArt/morning",
           "artCaption": "The last recommendation is yours to sign.",
           "learningObjective": "Demonstrate deployment judgment using new evaluation evidence.",
-          "artFocusX": 0.5
+          "artFocusX": 0.5,
+          "simpleExplanation": "Passing a reading test does not prove someone can safely drive a car. Accurate summaries test one skill; deciding when to disclose information tests another. Evaluate the actions you intend to permit, and keep independent controls for consequential actions."
         }
       ]
     }

@@ -21,7 +21,7 @@ namespace LearnAIGame.Story
     {
         public string id, speaker, title, body, question, concept, lesson;
         public string afterError, afterSuccess;
-        public string artResource, artCaption, learningObjective;
+        public string artResource, artCaption, learningObjective, simpleExplanation;
         public float artFocusX = .5f;
         public bool assessment;
         public StoryEvidence[] evidence;
